@@ -10,6 +10,13 @@ export const changeStatusShowInfoProduct = () => {
         type: types.CHANGE_STATUS_SHOW_INFO_PRODUCT
     }
 }
+
+// export const showCartProduct = () => {
+//     return {
+//         type: types.SHOW_CART_PRODUCT
+//     }
+// }
+
 export const getIdFood = (id) => {
     return {
         type: types.GET_ID_FOOD, id
@@ -28,5 +35,11 @@ export const getKeySearch = (key) => {
 export const addProduct = (product, valueInputNote, valueInputQuantity) => {
     return {
         type: types.ADD_PRODUCT, product, valueInputNote, valueInputQuantity
+    }
+}
+
+export const deleteProduct = (id, dataLocal) => {
+    return {
+        type: types.ADD_PRODUCT, id, dataLocal
     }
 }

@@ -70,8 +70,8 @@ const ListDrink = () => {
                                                             <span className="font-bold text-2xl truncate overflow-hiden block">{food.name}</span>
                                                             <span className="block text-gray-600 text-md max-h-6 overflow-hiden truncate">{food.description}</span>
                                                             <div className="flex justify-between text-center mt-5">
-                                                                <span className="block text-custom-yellow  font-bold text-2xl"><i className="fas fa-tags"></i> {food.price} Đ</span>
-                                                                <span className="block text-custom-yellow font-bold text-xl"> <i className="fas fa-star"></i> {food.rate}</span>
+                                                                <span className="block text-custom-yellow  font-bold text-md"><i className="fas fa-tags"></i> {food.price} Đ</span>
+                                                                <span className="block text-custom-yellow font-bold text-md"> <i className="fas fa-star"></i> {food.rate}</span>
                                                         </div>
                                                     </div>
                                             </div>  
@@ -91,8 +91,8 @@ const ListDrink = () => {
                                                                 <span className="font-bold text-2xl">{food.name}</span>
                                                                 <span className="block text-gray-600 text-md max-h-6 overflow-hiden truncate">{food.description}</span>
                                                                 <div className="flex justify-between text-center mt-5">
-                                                                    <span className="block text-custom-yellow  font-bold text-2xl"><i className="fas fa-tags"></i> {food.price} Đ</span>
-                                                                    <span className="block text-custom-yellow font-bold text-xl"> <i className="fas fa-star"></i> {food.rate}</span>
+                                                                    <span className="block text-custom-yellow  font-bold text-md"><i className="fas fa-tags"></i> {food.price} Đ</span>
+                                                                    <span className="block text-custom-yellow font-bold text-"> <i className="fas fa-star"></i> {food.rate}</span>
                                                             </div>
                                                         </div>
                                                 </div>  

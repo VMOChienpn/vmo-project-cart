@@ -10,7 +10,8 @@ const initialStateProducts = {
     idFood: "",
     idDrink: "",
     keySearch: "",
-    orderProduct: []
+    orderProduct: [],
+
 }
 
 const productsReducer = (state = initialStateProducts, action) => {
@@ -19,6 +20,18 @@ const productsReducer = (state = initialStateProducts, action) => {
             return { ...state, isStatusShowCart: !state.isStatusShowCart }
         case types.CHANGE_STATUS_SHOW_INFO_PRODUCT:
             return { ...state, isStatusShowInfoProduct: !state.isStatusShowInfoProduct }
+        // case types.SHOW_CART_PRODUCT: {
+        //     const listOder = [];
+        //     const orderProducts = JSON.parse(localStorage.getItem("order"))
+        //     if (orderProducts !== null) {
+        //         orderProducts.forEach(element => {
+        //             element.price = element.quantity * element.price
+        //             listOder.push(element)
+        //         });
+        //     }
+        //     return listOder;
+        // }
+
         case types.GET_ID_FOOD:
             return { ...state, idFood: action.id }
         case types.GET_ID_DRINK:
@@ -46,8 +59,12 @@ const productsReducer = (state = initialStateProducts, action) => {
                     alert("Thêm sản phẩm thành công")
                 }
             }
-
-            return state;
+            return state
+        case types.DELETE_PRODUCT: {
+            const filterItem = action.dataLocal.filter(item => item.id !== action.id)
+            localStorage.setItem("order", JSON.stringify(filterItem))
+            return state
+        }
         default:
             return state
     }

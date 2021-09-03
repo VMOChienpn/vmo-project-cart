@@ -11,6 +11,8 @@ import { addProduct } from '../../../../redux/products/action/index';
 const DrinkInfo = () => {
     const [valueInputNote, setValueInputNote] = useState("")
     const [valueInputQuatity, setValueInputQuatity] = useState("")
+    const [isValid, setIsValid] = useState(false)
+
     const getDrink = getDrinks();
     const getIdProduct = useSelector(state => state.allProducts.idDrink)
     const drink = getDrink.find((item) => item.id === getIdProduct)  
@@ -19,7 +21,11 @@ const DrinkInfo = () => {
         dispatch(changeStatusShowInfoProduct())
     }
     function handleGetProduct(){
-        dispatch(addProduct(drink, valueInputNote, valueInputQuatity))
+        if(valueInputQuatity === ""){
+            setIsValid(true)
+        }else{
+            dispatch(addProduct(drink, valueInputNote, valueInputQuatity))       
+        }        
     }
     const handleInputQuantity = (e) => {
         setValueInputQuatity(e.target.value);
@@ -35,12 +41,13 @@ const DrinkInfo = () => {
                     <img src={drink.image} alt="burger" className=" max-h-72 rounded-3xl w-56 mx-auto mt-10 mb-6" />
                     <span className="font-bold text-2xl mb-2">{drink.name}</span>
                     <span className="block text-gray-600 text-md">{drink.description}</span>
-                    <span className="block text-custom-yellow mt-5 font-bold text-3xl"> <i className="fas fa-tags"></i> {drink.price} VNĐ</span>
+                    <span className="block text-custom-yellow mt-5 font-bold text-2xl"> <i className="fas fa-tags"></i> {drink.price} VNĐ</span>
                     <span className="block mt-5"> Số lượng:
-                        <input id="quantity" onChange={handleInputQuantity} type="number" min="1" className="rounded-lg bg-gray-200 p-2 ml-2 w-24" placeholder="number"/>
+                        <input id="quantity" onChange={handleInputQuantity} type="number" min="1" className="rounded-lg bg-gray-200 p-2 ml-2 w-24" placeholder="Số lượng"/>
                     </span>
-                    <span className="block my-5">
-                        <input id="input" onChange={handleInputNote} type="text" className="rounded-lg bg-gray-200 p-2 w-6/12" placeholder="add a note.." />
+                    {isValid && (<p className="text-red-400 my-2">Vui lòng nhập số lượng</p>)}
+                    <span className="block my-4">
+                        <input id="input" onChange={handleInputNote} type="text" className="rounded-lg bg-gray-200 p-2 w-6/12" placeholder="Thêm ghi chú.." />
                     </span>
                     <button onClick={handleGetProduct} className="rounded-lg bg-custom-yellow px-4 py-2 font-bold hover:text-white text-xl transition">Thêm vào giỏ hàng</button>
                 </main>
