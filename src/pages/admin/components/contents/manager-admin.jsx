@@ -17,7 +17,7 @@ const ManagerAdmin = () => {
     const [password, setPassword] = useState("")
     
 
-    const [idDelete, setIdDelete] = useState()
+    const [idDelete, setIdDelete] = useState("")
     const [idEdit, setIdEdit] = useState()
 
     const dispatch = useDispatch()
@@ -58,10 +58,18 @@ const ManagerAdmin = () => {
             setTitleForm("Sửa tài khoản")
             setBtnStatusForm("Xác nhận")
             setIsFormAdd(!isFormAdd)
+            allUser.forEach(value => {
+                if(value.id === id){
+                    setName(value.name)
+                    setUsername(value.username)
+                    setPassword(value.password)
+                }
+            })
         }else{
             setTitleForm("Thêm tài khoản")
             setBtnStatusForm("Thêm mới")           
             setIsFormAdd(!isFormAdd)
+            setIdEdit(null)
         }
     }
 
@@ -78,11 +86,16 @@ const ManagerAdmin = () => {
             editValue.username = username;
             editValue.password = password;
             dispatch(editUser(idEdit, {name,username,password}))
-            console.log("đã sửa");
+            setIsFormAdd(false)
         }else{
+            setIdEdit("")            
             e.preventDefault()
             dispatch(addUser({name,username,password}))
-        }   
+            // setName("")
+            // setUsername("")
+            // setPassword("") 
+        }  
+  
         setIdEdit("") 
     }
     const btnDelete = (e) => {
@@ -137,19 +150,19 @@ const ManagerAdmin = () => {
                         <label className="block text-gray-700 text-sm font-bold mb-2">
                             Tên
                         </label>
-                        <input onChange={onChangeName} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="name" id="name" type="text"/>
+                        <input onChange={onChangeName} defaultValue={name} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="name" id="name" type="text"/>
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2">
                             Tài khoản
                         </label>
-                        <input onChange={onChangeUsername} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="username" id="username" type="text"/>
+                        <input onChange={onChangeUsername} defaultValue={username} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="username" id="username" type="text"/>
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2">
                             Mật khẩu
                         </label>
-                        <input onChange={onChangePassword} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="password" id="password" type="text"/>
+                        <input onChange={onChangePassword} defaultValue={password} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="password" id="password" type="text"/>
                     </div>
                     <div className="flex justify-center">
                             <button onClick={addBtn} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-32 rounded-full mt-6 mr-4">
