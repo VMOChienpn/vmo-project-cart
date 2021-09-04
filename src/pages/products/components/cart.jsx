@@ -88,6 +88,22 @@ const Cart = () => {
                         })}
                         </tbody>
                     </table>
+                    <div className=" w-fill my-4 border-input"/>
+                    <div className="w-7/12 mx-auto">
+                        <p className="text-xl">Thông tin người nhận hàng</p>
+                        <form className="bg-white pt-4">
+                            <div className="mb-4 flex">
+                                <input className="border-input rounded w-full py-2 px-3 text-gray-700 focus:outline-none " placeholder="Họ và tên"/>
+                            </div>
+                            <div className="mb-4">
+                                <input className="border-input rounded w-full py-2 px-3 text-gray-700 focus:outline-none " placeholder="Số điện thoại" />
+                            </div>
+                            <div className="mb-4">
+                                <input className="border-input rounded w-full py-2 px-3 text-gray-700 focus:outline-none " placeholder="Địa chỉ" />
+                            </div>
+                        </form>
+                    </div>
+
                     </>
                 ):(<div className="my-10 font-bold text-xl">Không có sản phẩm</div>)}
                            

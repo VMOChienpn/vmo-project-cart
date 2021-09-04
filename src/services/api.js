@@ -52,3 +52,24 @@ export const getDrinks = () => {
     })
     return list;
 }
+export const getUsers = () => {
+    let list = [];
+    firebase.database().ref('users/').on('value', (snapshot) => {
+        snapshot.forEach((snap) => {
+            const id = snap.key
+            const name = snap.val().name
+            const password = snap.val().description
+            const username = snap.val().price
+
+            list.push({
+                id: id,
+                name: name,
+                password: password,
+                username: username,
+
+            })
+        })
+    })
+    return list;
+}
+export const getUser = firebase.database().ref('users');

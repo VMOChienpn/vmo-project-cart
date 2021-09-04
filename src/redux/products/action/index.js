@@ -17,6 +17,12 @@ export const changeStatusShowInfoProduct = () => {
 //     }
 // }
 
+export const showPageHome = () => {
+    return {
+        type: types.SHOW_TOP_RATING
+    }
+}
+
 export const getIdFood = (id) => {
     return {
         type: types.GET_ID_FOOD, id

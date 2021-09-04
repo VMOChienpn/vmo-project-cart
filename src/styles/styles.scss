@@ -45,7 +45,9 @@ html {
 .min-h-72{
     min-height: 18rem;
 }
-	
+.border-input{
+    border: 1px solid rgb(58, 57, 57);
+}
 @media (max-width: 639px) { 
     .text-mobile{
         font-size: 2rem;

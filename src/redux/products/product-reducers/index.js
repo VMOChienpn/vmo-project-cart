@@ -11,7 +11,6 @@ const initialStateProducts = {
     idDrink: "",
     keySearch: "",
     orderProduct: [],
-
 }
 
 const productsReducer = (state = initialStateProducts, action) => {
@@ -31,7 +30,11 @@ const productsReducer = (state = initialStateProducts, action) => {
         //     }
         //     return listOder;
         // }
-
+        // case types.SHOW_TOP_RATING: {
+        //     const allFoodDrink = [...state.dataDrink, ...state.dataFood]
+        //     state.topRating = allFoodDrink.filter((value) => value.rate === 5)
+        //     return state;
+        // }
         case types.GET_ID_FOOD:
             return { ...state, idFood: action.id }
         case types.GET_ID_DRINK:
