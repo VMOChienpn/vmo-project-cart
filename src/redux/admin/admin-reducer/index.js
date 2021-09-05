@@ -22,10 +22,9 @@ const adminReducer = (state = initialStateAdmin, action) => {
             firebase.database().ref('products/' + action.category).push(action.product)
             console.log(action.product)
             return state;
-        // case types.EDIT_PRODUCT_ADMIN:
-        //     firebase.database().ref('products/' + action.category).child(action.idEdit).update(action.infoEdit)
-        //     console.log("aaaa")
-        //     return state;
+        case types.EDIT_PRODUCT_ADMIN:
+            firebase.database().ref('products/' + action.category).child(action.idEdit).update(action.infoEdit)
+            return state;
         case types.DELETE_PRODUCT_ADMIN: {
             // firebase.database().ref(`products/ + ${action.category} + "/" + ${action.idDelete}`).remove()
             // console.log('products/' + action.category + "/" + action.idDelete)

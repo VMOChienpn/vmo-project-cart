@@ -3,7 +3,7 @@ import {useState, useEffect} from 'react'
 import {useDispatch} from 'react-redux'
 
 
-import { addProductAdmin, deleteProductAdmin } from '../../../../redux/admin/action/index';
+import { addProductAdmin, deleteProductAdmin, editProductAdmin } from '../../../../redux/admin/action/index';
 
 import { getFood, getDrink} from '../../../../services/api';
 
@@ -18,8 +18,11 @@ const ManagerProducts = () => {
     const [check, setCheck] = useState("foods")
     const [idDelete, setIdDelete] = useState()
     const [categoryDelete, setCategoryDelete] = useState()
-    const [notes, setNotes] = useState("")
-    const [quantity, setQuantity] = useState("")
+    const [titleForm, setTitleForm] = useState("")
+    const [btnStatusForm, setBtnStatusForm] = useState("")
+    const [idEdit, setIdEdit] = useState("")
+    const [categoryEdit, setCategoryEdit] = useState("")
+
  
     const [food, setFood] = useState([])
     const [drink, setDrink] = useState([])
@@ -52,7 +55,7 @@ const ManagerProducts = () => {
             setFood(list)
         })
         getDrink.on('value', (snapshot) => {
-            const list = []
+            const list2 = []
             snapshot.forEach((snap) => {
                 const id = snap.key
                 const name = snap.val().name
@@ -62,7 +65,7 @@ const ManagerProducts = () => {
                 const image = snap.val().image
                 const notes = snap.val().notes
                 const quantity = snap.val().quantity
-                list.push({
+                list2.push({
                     id: id,
                     name: name,
                     description: description,
@@ -73,12 +76,33 @@ const ManagerProducts = () => {
                     quantity: quantity
                 })
             })
-            setDrink(list)
+            setDrink(list2)
         })
     }, [])
 
-    const handleClickAdd = () => {
-        setIsFormAdd(!isFormAdd)
+    const showFormAdd = (id, category) => {
+        if(id && category){
+            setIsFormAdd(!isFormAdd)
+            setTitleForm("Sửa sản phẩm")
+            setBtnStatusForm("Xác nhận")
+            setIdEdit(id)
+            setCategoryEdit(category)
+            const listAll = [...food, ...drink]
+            listAll.forEach(value => {
+                if(value.id === id){
+                    setName(value.name) 
+                    setDescription(value.description)
+                    setPrice(value.price)
+                    setRate(value.rate)
+                    setImage(value.image)
+                }
+            })
+
+        }else{
+            setIsFormAdd(!isFormAdd)
+            setTitleForm("Thêm sản phẩm")
+            setBtnStatusForm("Thêm mới")
+        }
     }
     const handleShowFormDel = (id, category) => {
         setIdDelete(id)
@@ -105,22 +129,35 @@ const ManagerProducts = () => {
         setCheck(e.target.value);
     }
     const addBtn = (e) => {
-        e.preventDefault()
-        setNotes("")
-        setQuantity("")
-        dispatch(addProductAdmin(check, {name, description, image, price, rate, notes, quantity}))
+        if(idEdit){
+            e.preventDefault()
+            const notes = ""
+            const quantity = ""
+            dispatch(editProductAdmin(categoryEdit, idEdit, {name, description, image, price, rate, notes, quantity}))
+            console.log(idEdit + categoryEdit);
+        }else{
+            e.preventDefault()
+            const notes = ""
+            const quantity = ""
+            dispatch(addProductAdmin(check, {name, description, image, price, rate, notes, quantity}))
+        }
+        setIdEdit("")
+        setCategoryEdit("")
     }
     const DeleteBtn = (e) => {
         e.preventDefault()
         dispatch(deleteProductAdmin(categoryDelete, idDelete))
         setisFormDelete(!isFormDelete)
-        console.log("đã vào đây");
+    }
+    const cancel = (e) => {
+        e.preventDefault()
+        setIsFormAdd(!isFormAdd)
     }
     return (
         <div className="h-auto">
             <h1 className="text-center text-2xl font-bold ">QUẢN LÝ SẢN PHẨM</h1> 
 
-            <button onClick={handleClickAdd} className=" mt-10 mr-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">Thêm mới</button>   
+            <button onClick={()=>showFormAdd()} className=" mt-10 mr-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">Thêm mới</button>   
 
             <div className="w-full">
                 <h1 className="text-2xl font-bold text-center mb-6">FOOD</h1>
@@ -151,7 +188,7 @@ const ManagerProducts = () => {
                                             <td className="text-left py-3 px-4">{value.price}</td>
                                             <td className="text-left py-3 px-4">{value.rate}</td>
                                             <td className="flex item-center jutify-center">
-                                                <button className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-1 rounded-md mr-1">Sửa</button>
+                                                <button onClick={()=>showFormAdd(value.id, "foods")} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-1 rounded-md mr-1">Sửa</button>
                                                 <button onClick={()=>handleShowFormDel(value.id, 'foods')} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-1 rounded-md mr-1">Xóa</button>
                                             </td>
                                         </tr>
@@ -190,7 +227,7 @@ const ManagerProducts = () => {
                                             <td className="text-left py-3 px-4">{value.price}</td>
                                             <td className="text-left py-3 px-4">{value.rate}</td>
                                             <td className="flex item-center jutify-center">
-                                                <button className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-1 rounded-md mr-1">Sửa</button>
+                                                <button onClick={()=>showFormAdd(value.id, "drinks")} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-1 rounded-md mr-1">Sửa</button>
                                                 <button onClick={()=>handleShowFormDel(value.id, 'drinks')} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-1 rounded-md mr-1">Xóa</button>
                                             </td>
                                         </tr>
@@ -204,26 +241,26 @@ const ManagerProducts = () => {
             </div>
             {isFormAdd ? (
                     <form className="absolute top-1/2 left-1/2 transform -translate-x-2/4 -translate-y-2/4  bg-blue-100 shadow-sm rounded-2xl px-8 pt-6 pb-8 mb-4 w-2/4 z-10">
-                        <h1 className="text-center text-2xl font-bold mb-6">Thêm mới sản phẩm</h1>
+                        <h1 className="text-center text-2xl font-bold mb-6">{titleForm}</h1>
                         <div className ="flex">
                             <div className="w-1/2 mr-4">
                                 <div className="mb-4">
                                     <label className="block text-gray-700 text-sm font-bold mb-2">
                                         Tên
                                     </label>
-                                    <input onChange={getName} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text"/>
+                                    <input onChange={getName} defaultValue={name} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text"/>
                                 </div>
                                 <div className="mb-4">
                                     <label className="block text-gray-700 text-sm font-bold mb-2">
                                         Mô tả
                                     </label>
-                                    <input onChange={getDescription} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text"/>
+                                    <input onChange={getDescription} defaultValue={description} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text"/>
                                 </div>
                                 <div className="mb-4">
                                     <label className="block text-gray-700 text-sm font-bold mb-2">
                                         Ảnh
                                     </label>
-                                    <input onChange={getImage} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text"/>
+                                    <input onChange={getImage} defaultValue={image} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text"/>
                                 </div>
                             </div>
                             <div className="w-1/2">                              
@@ -231,22 +268,22 @@ const ManagerProducts = () => {
                                     <label className="block text-gray-700 text-sm font-bold mb-2">
                                         Giá
                                     </label>
-                                    <input onChange={getPrice} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text"/>
+                                    <input onChange={getPrice} defaultValue={price} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text"/>
                                 </div>
                                 <div className="mb-4">
                                     <label className="block text-gray-700 text-sm font-bold mb-2">
                                         Đánh giá
                                     </label>
-                                    <input onChange={getRate} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text"/>
+                                    <input onChange={getRate} defaultValue={rate} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text"/>
                                 </div>
                                 <div className="mt-10 ml-10">
                                     <div className="mt-2" onChange={getCategory}>
                                         <label className="inline-flex items-center text-xl">
-                                            <input type="radio" className="form-radio" name="category" value="drinks"/>
+                                            <input type="radio" className="form-radio" name="category" value="foods"/>
                                             <span className="ml-2 font-bold">Food</span>
                                         </label>
                                         <label className="inline-flex items-center ml-6 text-xl">
-                                            <input type="radio" className="form-radio" name="category" value="foods" />
+                                            <input type="radio" className="form-radio" name="category" value="drinks" />
                                             <span className="ml-2 font-bold">Drink</span>
                                         </label>
                                     </div>
@@ -256,9 +293,9 @@ const ManagerProducts = () => {
                         </div>
                             <div className="flex justify-center">
                                 <button onClick={addBtn} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-32 rounded-full mt-6 mr-4">
-                                    Thêm mới
+                                    {btnStatusForm}
                                 </button>
-                                <button onClick={handleClickAdd} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-32 rounded-full mt-6">
+                                <button onClick={cancel} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-32 rounded-full mt-6">
                                 Hủy bỏ
                                 </button>
                             </div>
