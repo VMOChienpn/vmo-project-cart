@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+//import { useLocation } from "react-router-dom";
 
 import Header from '../../components/header/header';
 import Footer from '../../components/footer/footer';

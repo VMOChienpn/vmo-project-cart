@@ -8,7 +8,7 @@ export const PATH_LOGIN = '/login';
 export const PATH_MANAGER_PRODUCTS = '/admin/products';
 export const PATH_MANAGER_ORDERS = '/admin/order';
 export const PATH_MANAGER_ADMIN = '/admin/user';
-export const PATH_PRODUCT_DETAIL = '/products/:id';
+//export const PATH_PRODUCT_DETAIL = '/products/:id';
 
 
 

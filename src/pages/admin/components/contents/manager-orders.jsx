@@ -9,7 +9,7 @@ const ManagerOrders = () => {
     }
     return (
         <div className="relative">
-            <h1 className="text-center text-2xl font-bold ">Quản lý Đặt Hàng</h1>
+            <h1 className="text-center text-2xl font-bold ">QUẢN LÝ ĐẶT HÀNG</h1>
             <div className="w-full my-10 flex">               
                 <div className="bg-white h-full w-full mr-7">
                     <table className="min-w-full bg-white ">

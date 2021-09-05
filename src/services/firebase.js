@@ -10,7 +10,9 @@ var config = {
     appId: process.env.REACT_APP_FIREBASE_APP_ID,
     measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_I
 };
-firebase.initializeApp(config);
+if (!firebase.apps.length) {
+    firebase.initializeApp(config);
+}
 require('firebase/database')
 
 // const dataFoods = firebase.database().ref('products/' + 'foods');

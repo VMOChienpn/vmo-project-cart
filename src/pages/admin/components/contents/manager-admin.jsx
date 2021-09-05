@@ -81,19 +81,12 @@ const ManagerAdmin = () => {
     const addBtn = (e) => {   
         if(idEdit){
             e.preventDefault()
-            const editValue = {};
-            editValue.name = name;
-            editValue.username = username;
-            editValue.password = password;
             dispatch(editUser(idEdit, {name,username,password}))
             setIsFormAdd(false)
         }else{
             setIdEdit("")            
             e.preventDefault()
             dispatch(addUser({name,username,password}))
-            // setName("")
-            // setUsername("")
-            // setPassword("") 
         }  
   
         setIdEdit("") 
@@ -106,7 +99,7 @@ const ManagerAdmin = () => {
 
     return (
         <div className="w-full">
-            <h1 className="text-center text-2xl font-bold ">Quản lý Tài Khoản</h1>
+            <h1 className="text-center text-2xl font-bold ">QUẢN LÝ ADMIN</h1>
             <button onClick={()=>handleShowFormAdd()} className="my-5 mr-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">Thêm mới</button>
             <div className=" flex relative">               
                 <div className="bg-white h-full w-full mr-7">

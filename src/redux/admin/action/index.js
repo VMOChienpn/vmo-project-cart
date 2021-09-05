@@ -15,3 +15,19 @@ export const editUser = (id, user) => {
         type: types.EDIT_USER, id, user
     }
 }
+
+export const addProductAdmin = (category, product) => {
+    return {
+        type: types.ADD_PRODUCT_ADMIN, category, product
+    }
+}
+export const deleteProductAdmin = (category, idDelete) => {
+    return {
+        type: types.DELETE_PRODUCT_ADMIN, category, idDelete
+    }
+}
+export const editProductAdmin = (category, idEdit, infoEdit) => {
+    return {
+        type: types.EDIT_PRODUCT_ADMIN, category, idEdit, infoEdit
+    }
+}

@@ -29,7 +29,7 @@ const TopSelling = () => {
                         {allProduct.map((element) => {
                                 return(
                                     <>
-                                    <div key={element.id} className="bg-white rounded-lg shadow-md p-7 hover:shadow-lg item" style={{maxHeight:"454px"}}>
+                                    <div key={element.id} className="bg-white rounded-lg shadow-md p-7 item" style={{maxHeight:"454px"}}>
                                         <img src={element.image} alt="burger" className="w-full max-h-72 rounded-3xl" />
                                         <div className=" mt-5 text-center">
                                             <span className="font-bold text-2xl truncate">{element.name}</span>

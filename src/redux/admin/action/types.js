@@ -2,4 +2,9 @@ export const ADD_USER = "ADD_USER"
 export const DELETE_USER = "DELETE_USER"
 export const EDIT_USER = "EDIT_USER"
 
+export const ADD_PRODUCT_ADMIN = "ADD_PRODUCT_ADMIN"
+export const DELETE_PRODUCT_ADMIN = "DELETE_PRODUCT_ADMIN"
+export const EDIT_PRODUCT_ADMIN = "EDIT_PRODUCT_ADMIN"
+
+
 
