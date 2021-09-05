@@ -25,24 +25,10 @@ const adminReducer = (state = initialStateAdmin, action) => {
         case types.EDIT_PRODUCT_ADMIN:
             firebase.database().ref('products/' + action.category).child(action.idEdit).update(action.infoEdit)
             return state;
-        case types.DELETE_PRODUCT_ADMIN: {
-            // firebase.database().ref(`products/ + ${action.category} + "/" + ${action.idDelete}`).remove()
-            // console.log('products/' + action.category + "/" + action.idDelete)
-            // const mPostReference = firebase.database().getInstance().getReference()
-            //     .child(action.category).child(action.idDelete);
-            // mPostReference.removeValue();
-            // console.log("đây nữa" + action.category + action.idDelete)
-            // firebase.database().ref('products/').child(action.category).child(action.idDelete).remove()
-            //console.log(action.idDelete)
-            // const a = async () => {
-            //     let b = await (firebase.database().ref('products/' + action.category))
-            //     b.child(action.idDelete)
-            // }
-            // a()
-
-
+        case types.DELETE_PRODUCT_ADMIN:
+            firebase.database().ref('products/' + action.category).child(action.idDelete).remove()
             return state;
-        }
+
 
         default:
             return state;
