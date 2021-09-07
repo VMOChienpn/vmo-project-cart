@@ -11,13 +11,14 @@ import Cart from '../cart';
 import {changeStatusShowCart} from '../../../../redux/products/action/index'
 import Search from '../search';
 import DrinkInfo from './drink-info';
+import { getDrink } from '../../../../services/api';
 
 
 const ListDrink = () => {
     const isStatusShowCart = useSelector((state) => state.allProducts.isStatusShowCart)
     const dispatch = useDispatch()
     const isStatusShowInfoProduct = useSelector((state) => state.allProducts.isStatusShowInfoProduct)
-    const dataDrink = useSelector(state => state.allProducts.dataDrink)
+    //const dataDrink = useSelector(state => state.allProducts.dataDrink)
     const keySearch = useSelector(state => state.allProducts.keySearch)
     const [listDrinks, setListDrinks] = useState([])
 
@@ -29,7 +30,30 @@ const ListDrink = () => {
     }
 
     useEffect(() => {
-        setListDrinks(dataDrink())
+        getDrink.on('value', (snapshot) => {
+            let list = [];
+            snapshot.forEach((snap) => {
+                const id = snap.key
+                const name = snap.val().name
+                const description = snap.val().description
+                const price = snap.val().price
+                const rate = snap.val().rate
+                const image = snap.val().image
+                const notes = snap.val().notes
+                const quantity = snap.val().quantity
+                list.push({
+                    id: id,
+                    name: name,
+                    description: description,
+                    price: price,
+                    rate: rate,
+                    image: image,
+                    notes: notes,
+                    quantity: quantity
+                })
+            })
+            setListDrinks(list)
+        })
     }, [])
 
     const handleClick = (e) => {

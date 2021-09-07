@@ -32,7 +32,10 @@ const DrinkInfo = () => {
     }
     const handleInputNote = (e) => {
         setValueInputNote(e.target.value)
-    }       
+    }  
+    const numberWithCommas = (x) => {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }     
     return (
         <aside className="w-full md:w-3/5 xl:w-2/5 shadow-2xl rounded-lg bg-white z-10 absolute left-1/2 -translate-x-2/4 transform" id="side-panel">
             <div className="p-5">
@@ -41,7 +44,7 @@ const DrinkInfo = () => {
                     <img src={drink.image} alt="burger" className=" max-h-72 rounded-3xl w-56 mx-auto mt-10 mb-6" />
                     <span className="font-bold text-2xl mb-2">{drink.name}</span>
                     <span className="block text-gray-600 text-md">{drink.description}</span>
-                    <span className="block text-custom-yellow mt-5 font-bold text-2xl"> <i className="fas fa-tags"></i> {drink.price} VNĐ</span>
+                    <span className="block text-custom-yellow mt-5 font-bold text-2xl"> <i className="fas fa-tags"></i> {numberWithCommas(drink.price)} VNĐ</span>
                     <span className="block mt-5"> Số lượng:
                         <input id="quantity" onChange={handleInputQuantity} type="number" min="1" className="rounded-lg bg-gray-200 p-2 ml-2 w-24" placeholder="Số lượng"/>
                     </span>

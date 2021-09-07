@@ -75,3 +75,5 @@ export const getUsers = () => {
 export const getUser = firebase.database().ref('users');
 export const getFood = firebase.database().ref('products/' + "foods");
 export const getDrink = firebase.database().ref('products/' + "drinks");
+export const getOrder = firebase.database().ref('products/' + "order");
+

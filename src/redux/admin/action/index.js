@@ -31,3 +31,9 @@ export const editProductAdmin = (category, idEdit, infoEdit) => {
         type: types.EDIT_PRODUCT_ADMIN, category, idEdit, infoEdit
     }
 }
+
+export const deleteProductOrder = (id) => {
+    return {
+        type: types.DELETE_PRODUCT_ORDER, id
+    }
+}

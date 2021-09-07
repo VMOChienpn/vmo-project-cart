@@ -49,3 +49,9 @@ export const deleteProduct = (id, dataLocal) => {
         type: types.ADD_PRODUCT, id, dataLocal
     }
 }
+
+export const addProductOrderFirebase = (order) => {
+    return {
+        type: types.ADD_PRODUCT_ORDER_FIREBASE, order
+    }
+}

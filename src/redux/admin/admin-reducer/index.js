@@ -2,9 +2,8 @@ import * as types from "../action/types"
 import firebase from 'firebase'
 
 const initialStateAdmin = {
-
 }
-firebase.database().ref('products/' + 'foods').child("-MipWoAU7b8XwTNdQfW5").remove();
+
 const adminReducer = (state = initialStateAdmin, action) => {
     switch (action.type) {
 
@@ -29,6 +28,9 @@ const adminReducer = (state = initialStateAdmin, action) => {
             firebase.database().ref('products/' + action.category).child(action.idDelete).remove()
             return state;
 
+        case types.DELETE_PRODUCT_ORDER:
+            firebase.database().ref('products/order').child(action.id).remove()
+            return state;
 
         default:
             return state;

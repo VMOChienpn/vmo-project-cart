@@ -1,4 +1,5 @@
 import * as types from "../action/types"
+import firebase from 'firebase'
 
 import { getDrinks, getFoods } from "../../../services/api"
 
@@ -11,6 +12,7 @@ const initialStateProducts = {
     idDrink: "",
     keySearch: "",
     orderProduct: [],
+
 }
 
 const productsReducer = (state = initialStateProducts, action) => {
@@ -19,22 +21,6 @@ const productsReducer = (state = initialStateProducts, action) => {
             return { ...state, isStatusShowCart: !state.isStatusShowCart }
         case types.CHANGE_STATUS_SHOW_INFO_PRODUCT:
             return { ...state, isStatusShowInfoProduct: !state.isStatusShowInfoProduct }
-        // case types.SHOW_CART_PRODUCT: {
-        //     const listOder = [];
-        //     const orderProducts = JSON.parse(localStorage.getItem("order"))
-        //     if (orderProducts !== null) {
-        //         orderProducts.forEach(element => {
-        //             element.price = element.quantity * element.price
-        //             listOder.push(element)
-        //         });
-        //     }
-        //     return listOder;
-        // }
-        // case types.SHOW_TOP_RATING: {
-        //     const allFoodDrink = [...state.dataDrink, ...state.dataFood]
-        //     state.topRating = allFoodDrink.filter((value) => value.rate === 5)
-        //     return state;
-        // }
         case types.GET_ID_FOOD:
             return { ...state, idFood: action.id }
         case types.GET_ID_DRINK:
@@ -66,6 +52,10 @@ const productsReducer = (state = initialStateProducts, action) => {
         case types.DELETE_PRODUCT: {
             const filterItem = action.dataLocal.filter(item => item.id !== action.id)
             localStorage.setItem("order", JSON.stringify(filterItem))
+            return state
+        }
+        case types.ADD_PRODUCT_ORDER_FIREBASE: {
+            firebase.database().ref('products/order').push(action.order)
             return state
         }
         default:

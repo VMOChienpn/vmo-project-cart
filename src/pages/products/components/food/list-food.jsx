@@ -11,11 +11,12 @@ import Cart from '../cart';
 import {changeStatusShowCart} from '../../../../redux/products/action'
 import Search from '../search';
 import FoodInfo from './food-info';
+import { getFood } from '../../../../services/api';
 
 const ListFood = () => {
     const isStatusShowCart = useSelector((state) => state.allProducts.isStatusShowCart)
     const isStatusShowInfoProduct = useSelector((state) => state.allProducts.isStatusShowInfoProduct)
-    const dataFood = useSelector(state => state.allProducts.dataFood)
+    //const dataFood = useSelector(state => state.allProducts.dataFood)
     const keySearch = useSelector(state => state.allProducts.keySearch)
     const [listFoods, setListFoods] = useState([])
     const showCart = () => {
@@ -27,8 +28,32 @@ const ListFood = () => {
     }
 
     useEffect(() => {
-        setListFoods(dataFood())
+        getFood.on('value', (snapshot) => {
+            let list = [];
+            snapshot.forEach((snap) => {
+                const id = snap.key
+                const name = snap.val().name
+                const description = snap.val().description
+                const price = snap.val().price
+                const rate = snap.val().rate
+                const image = snap.val().image
+                const notes = snap.val().notes
+                const quantity = snap.val().quantity
+                list.push({
+                    id: id,
+                    name: name,
+                    description: description,
+                    price: price,
+                    rate: rate,
+                    image: image,
+                    notes: notes,
+                    quantity: quantity
+                })
+            })
+            setListFoods(list)
+        })
     }, [])
+
 
     const handleClick = (e) => {
         showInfoProduct()

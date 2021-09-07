@@ -1,21 +1,24 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+//import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import "../../../styles/styles.scss"
+import { getFood } from '../../../services/api';
 
 
 
 const TopSelling = () => {
-    const dataFood = useSelector(state => state.allProducts.dataFood)
-    const dataDrink = useSelector(state => state.allProducts.dataDrink)
-    const [allProduct, setallProduct] = useState([])
-    const allFoodDrink = [...dataFood(), ...dataDrink()]
-    const topRating = allFoodDrink.filter((value)=> value.rate === 5)
+    const [food, setFood] = useState([])
  
-
     useEffect(() => {
-        setallProduct(topRating)
+        getFood.on('value', (snapshot) => {
+            const list = []
+            snapshot.forEach((snap) => {
+                list.push(snap.val())
+            })
+            setFood(list.filter((value)=> value.rate === 5))
+        })
     }, [])
+
 
     return (
         <div className="md:p-16 pt-mobile">
@@ -26,23 +29,23 @@ const TopSelling = () => {
                 <div className="lg:col-span-5 w-2/3 m-auto">
                     <div className="mt-16">
                         <div className="mt-10 grid sm:grid-cols-2 xl-grid-cols-3 xl2-grid-cols-5 gap-16">
-                        {allProduct.map((element) => {
-                                return(
-                                    <>
-                                    <div key={element.id} className="bg-white rounded-lg shadow-md p-7 item" style={{maxHeight:"454px"}}>
-                                        <img src={element.image} alt="burger" className="w-full max-h-72 rounded-3xl" />
-                                        <div className=" mt-5 text-center">
-                                            <span className="font-bold text-2xl truncate">{element.name}</span>
-                                            <span className="block text-gray-600 text-md max-h-6 overflow-hiden truncate">{element.description}</span>
-                                            <div className="flex justify-between text-center mt-5">
-                                                <span className="block text-custom-yellow  font-bold text-md"><i className="fas fa-tags"></i> {element.price} Đ</span>
-                                                <span className="block text-custom-yellow font-bold text-md"> <i className="fas fa-star"></i> {element.rate}</span>
+                        {food.length > 0 ? (
+                            food.map((element, index) => {
+                                    return(   
+                                        <div key={index} className="bg-white rounded-lg shadow-md p-7 item" style={{maxHeight:"454px"}}>
+                                            <img src={element.image} alt="burger" className="w-full max-h-72 rounded-3xl" />
+                                            <div className=" mt-5 text-center">
+                                                <span className="font-bold text-2xl truncate">{element.name}</span>
+                                                <span className="block text-gray-600 text-md max-h-6 overflow-hiden truncate">{element.description}</span>
+                                                <div className="flex justify-between text-center mt-5">
+                                                    <span className="block text-custom-yellow  font-bold text-md"><i className="fas fa-tags"></i> {element.price} Đ</span>
+                                                    <span className="block text-custom-yellow font-bold text-md"> <i className="fas fa-star"></i> {element.rate}</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    </>
-                                )
-                            })}
+                                    )
+                                })                               
+                        ):null}
                         </div>
                     </div>
                 </div>
