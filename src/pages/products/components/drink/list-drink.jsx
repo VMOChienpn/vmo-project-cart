@@ -18,7 +18,6 @@ const ListDrink = () => {
     const isStatusShowCart = useSelector((state) => state.allProducts.isStatusShowCart)
     const dispatch = useDispatch()
     const isStatusShowInfoProduct = useSelector((state) => state.allProducts.isStatusShowInfoProduct)
-    //const dataDrink = useSelector(state => state.allProducts.dataDrink)
     const keySearch = useSelector(state => state.allProducts.keySearch)
     const [listDrinks, setListDrinks] = useState([])
 

@@ -1,22 +1,21 @@
 import * as types from "../action/types"
 import firebase from 'firebase'
 
-import { getDrinks, getFoods } from "../../../services/api"
+import { toast } from "react-toastify"
 
 const initialStateProducts = {
-    dataFood: getFoods,
-    dataDrink: getDrinks,
     isStatusShowCart: false,
     isStatusShowInfoProduct: false,
     idFood: "",
     idDrink: "",
     keySearch: "",
     orderProduct: [],
-
+    dataFoodTest: [],
 }
 
 const productsReducer = (state = initialStateProducts, action) => {
     switch (action.type) {
+
         case types.CHANGE_STATUS_SHOW_CART:
             return { ...state, isStatusShowCart: !state.isStatusShowCart }
         case types.CHANGE_STATUS_SHOW_INFO_PRODUCT:
@@ -35,7 +34,9 @@ const productsReducer = (state = initialStateProducts, action) => {
                 localStorage.setItem("order", JSON.stringify(state.orderProduct))
                 if (state.orderProduct) {
                     document.getElementById('input').value = ""
-                    alert("Thêm sản phẩm thành công")
+                    toast.success("Add to cart successfully", {
+                        position: "top-right"
+                    })
                 }
             } else {
                 const getItemFromLocal = JSON.parse(localStorage.getItem('order'))
@@ -45,7 +46,10 @@ const productsReducer = (state = initialStateProducts, action) => {
                 localStorage.setItem("order", JSON.stringify(state.orderProduct))
                 if (state.orderProduct) {
                     document.getElementById('input').value = ""
-                    alert("Thêm sản phẩm thành công")
+                    toast.success("Add to cart successfully", {
+                        position: "top-right",
+                        duration: 2000
+                    })
                 }
             }
             return state

@@ -11,12 +11,6 @@ export const changeStatusShowInfoProduct = () => {
     }
 }
 
-// export const showCartProduct = () => {
-//     return {
-//         type: types.SHOW_CART_PRODUCT
-//     }
-// }
-
 export const showPageHome = () => {
     return {
         type: types.SHOW_TOP_RATING

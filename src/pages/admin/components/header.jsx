@@ -1,11 +1,19 @@
 import React from 'react';
 import {useState} from 'react'
+import { useHistory } from 'react-router';
+import { PATH_LOGIN } from '../../../routers/router';
 
 const Header = () => {
+    let history = useHistory()
     const [isShowLog, setIsShowLog] = useState(false)
 
     const handleClickShowLog = () => {
         setIsShowLog(!isShowLog)
+    }
+
+    const logOut = () => {
+        localStorage.removeItem("accessToken")
+        history.replace(PATH_LOGIN)
     }
     return (
         <>
@@ -19,7 +27,7 @@ const Header = () => {
                         (<div className="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16">
                                 <a href="#" className="block px-4 py-2 hover:text-blue-500">Account</a>
                                 <a href="#" className="block px-4 py-2 hover:text-blue-500">Support</a>
-                                <a href="#" className="block px-4 py-2 hover:text-blue-500">Sign Out</a>
+                                <a onClick={logOut} href="#" className="block px-4 py-2 hover:text-blue-500">Sign Out</a>
                         </div>)}                    
                     </div>
             </header>

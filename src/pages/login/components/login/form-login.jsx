@@ -1,6 +1,51 @@
 import React from 'react';
+import { useHistory } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginStatus } from '../../../../redux/admin/action';
+import { getUser } from '../../../../services/api';
 import "./style.scss"
+import { PATH_ADMIN } from '../../../../routers/router';
+
 const FormLogin = () => {
+    let history = useHistory()
+    const [user, setUser] = useState()
+    const [isValid, setIsValid] = useState(false)
+    const [detailts, setDetails] = useState({name: "", password: ""})
+    const loginStatusa = useSelector(state => state.allAdmin.statusLogin)
+    const dispatch = useDispatch()
+    const submitHandle = (e) => {
+        e.preventDefault()
+    }
+    console.log(loginStatusa);
+    useEffect(() => {
+        getUser.on("value", snapshot => {
+            const list = []
+            snapshot.forEach(value => {
+                list.push(value.val())
+            })
+            setUser(list)
+        })
+        setIsValid(false)
+    }, [])
+    const login = () => {
+        // localStorage.setItem("accessToken", true)
+        // history.replace(PATH_ADMIN)
+        user.forEach(value => {
+            if(detailts.name == value.name && detailts.password == value.password){
+                dispatch(loginStatus())
+                setUser({
+                    name: detailts.name,
+                    password: detailts.password
+                })
+                console.log("oke. vào đi em");
+                history.replace(PATH_ADMIN)
+                setIsValid(false)
+            }else{
+                setIsValid(true)
+            }
+        })
+    }
     return (
         <div className="body body-bg min-h-screen pt-12 md:pt-20 pb-6 px-2 md:px-0">
             <header className="max-w-lg mx-auto">
@@ -14,16 +59,17 @@ const FormLogin = () => {
                 <p className="text-gray-600 pt-2">Sign in to your account.</p>
                 </section>
                 <section className="mt-10">
-                <form className="flex flex-col" method="POST" action="#">
+                <form onSubmit={submitHandle} className="flex flex-col">
                     <div className="mb-6 pt-3 rounded bg-gray-200">
-                        <label className="block text-gray-700 text-sm font-bold mb-2 ml-3" htmlFor="email">User</label>
-                        <input type="text" id="email" className="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3" />
+                        <label className="block text-gray-700 text-sm font-bold mb-2 ml-3" htmlFor="name">User</label>
+                        <input onChange={(e) => setDetails({...detailts, name: e.target.value})} value={detailts.name} type="text" id="name" className="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3" required/>
                     </div>
                     <div className="mb-6 pt-3 rounded bg-gray-200">
                         <label className="block text-gray-700 text-sm font-bold mb-2 ml-3" htmlFor="password">Password</label>
-                        <input type="password" id="password" className="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3" />
+                        <input onChange={(e) => setDetails({...detailts, password: e.target.value})} value={detailts.password} type="password" id="password" className="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3" required/>
                     </div>
-                    <button className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200" type="submit">Sign In</button>
+                    <button onClick={login} className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200" type="submit">Sign In</button>
+                    {isValid && (<div className="text-md font-bold mt-2 text-red-500">Mật khẩu hoặc tài khoản không hợp lệ</div>)}
                 </form>
                 </section>
             </main>

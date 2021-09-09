@@ -13,16 +13,14 @@ import ListDrink from '../products/components/drink/list-drink';
 const index = () => {
     return (
         <div>
-                <Header/>
-                    <Switch>
-                        <Route exact path={PATH_NULL} component={Home} />
-                        <Route exact path={PATH_HOME} component={Home} />
-                        {/* <Route exact path={PATH_FOOD, PATH_DRINK} component={Products} /> */}
-                        <Route exact path={PATH_FOOD} component={ListFood} />
-                        <Route exact path={PATH_DRINK} component={ListDrink} />
-                    </Switch>
-                <Footer/>          
-
+            <Header/>
+                <Switch>
+                    <Route exact path={PATH_NULL} component={Home} />
+                    <Route exact path={PATH_HOME} component={Home} />
+                    <Route exact path={PATH_FOOD} component={ListFood} />
+                    <Route exact path={PATH_DRINK} component={ListDrink} />
+                </Switch>
+            <Footer/>          
         </div>
             
     );

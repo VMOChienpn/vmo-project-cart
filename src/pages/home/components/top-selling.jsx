@@ -11,11 +11,28 @@ const TopSelling = () => {
  
     useEffect(() => {
         getFood.on('value', (snapshot) => {
-            const list = []
+            let list = [];
             snapshot.forEach((snap) => {
-                list.push(snap.val())
+                const id = snap.key
+                const name = snap.val().name
+                const description = snap.val().description
+                const price = snap.val().price
+                const rate = snap.val().rate
+                const image = snap.val().image
+                const notes = snap.val().notes
+                const quantity = snap.val().quantity
+                list.push({
+                    id: id,
+                    name: name,
+                    description: description,
+                    price: price,
+                    rate: rate,
+                    image: image,
+                    notes: notes,
+                    quantity: quantity
+                })
             })
-            setFood(list.filter((value)=> value.rate === 5))
+            setFood(list.filter((value) => value.rate == 5.0))
         })
     }, [])
 

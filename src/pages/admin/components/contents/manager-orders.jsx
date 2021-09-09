@@ -2,6 +2,8 @@ import React from 'react';
 import firebase from 'firebase';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { getOrder } from '../../../../services/api';
 import { deleteProductOrder } from '../../../../redux/admin/action';
@@ -33,7 +35,7 @@ const ManagerOrders = () => {
                     addressUser: addressUser 
                 });
             })
-            setListUser(list);
+            setListUser(list.reverse());
         })
         }, [])
 
@@ -45,18 +47,25 @@ const ManagerOrders = () => {
     const confirmDeleteOeder = () => {
         dispatch(deleteProductOrder(idDelete))
         setIsFormDelete(!isFormDelete)
+        toast.success("Delete Success", {
+            position: "bottom-right",
+        })
     }
     const handleShowFormDetail = (id) => {
         setIsFormDetail(!isFormDetail)
         firebase.database().ref('products/' + "order").child(id).on('value', snapshot =>{
             const order = snapshot.val();
-    
-            const getUser = order.shift()
-            const list = []
-            list.push(getUser)
-            setInfoUser(list)
-
-            setInfoOrder(order);
+            if(order[0]){
+                const getUser = order[0]
+                const list = []
+                list.push(getUser)
+                setInfoUser(list)
+                order.shift()
+                setInfoOrder(order);
+            }   
+            else{
+                return;
+            }
         });
     }
     const cancelFormDetail = () => {
@@ -76,16 +85,16 @@ const ManagerOrders = () => {
     }
     return (
         <div className="relative">
-            <h1 className="text-center text-2xl font-bold ">QUẢN LÝ ĐẶT HÀNG</h1>
+            <h1 className="text-center text-2xl font-bold ">ORDER MANAGEMENT</h1>
             <div className="w-full my-10 flex">               
                 <div className="bg-white h-full w-full mr-7">
                     <table className="min-w-full bg-white ">
                         <thead className="bg-gray-500 text-white">
                             <tr>
-                                <th className="w-1/12 text-left py-3 px-4 uppercase font-semibold text-sm">STT</th>
-                                <th className="w-3/12 text-left py-3 px-4 uppercase font-semibold text-sm">Khách hàng</th>
-                                <th className="w-3/12 text-left py-3 px-4 uppercase font-semibold text-sm">Số điện thoại</th>
-                                <th className="w-3/12 text-left py-3 px-4 uppercase font-semibold text-sm">Địa chỉ</th>
+                                <th className="w-1/12 text-left py-3 px-4 uppercase font-semibold text-sm">ID</th>
+                                <th className="w-3/12 text-left py-3 px-4 uppercase font-semibold text-sm">Name</th>
+                                <th className="w-3/12 text-left py-3 px-4 uppercase font-semibold text-sm">Phone number</th>
+                                <th className="w-3/12 text-left py-3 px-4 uppercase font-semibold text-sm">Address</th>
                                 <th className="w-2/12 text-left py-3 px-4 uppercase font-semibold text-sm"></th>
                             </tr>
                         </thead>
@@ -93,13 +102,13 @@ const ManagerOrders = () => {
                              {listUser.map((value, key) => {
                                 return(
                                     <tr key={key} style={{borderBottom:"1px solid gray"}}>
-                                        <td className="text-left py-2 px-4">{key}</td>
+                                        <td className="text-left py-2 px-4">{key + 1}</td>
                                         <td className="text-left py-2 px-4">{value.nameUser}</td>
                                         <td className="text-left py-2 px-4">{value.numberUser}</td>
                                         <td className="text-left py-2 px-4">{value.addressUser}</td>
                                         <td className="flex py-2">
-                                        <button onClick={()=>handleShowFormDetail(value.id)} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold w-20 py-2 rounded-md">Chi tiết</button>
-                                        <button onClick={()=>handleShowFormDel(value.id)} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold w-20 py-2 rounded-md mx-4">Xóa</button>
+                                        <button onClick={()=>handleShowFormDetail(value.id)} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold w-20 py-2 rounded-md">Details</button>
+                                        <button onClick={()=>handleShowFormDel(value.id)} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold w-20 py-2 rounded-md mx-4">Delete</button>
                                         </td>
                                      </tr>                                         
                                     )
@@ -110,27 +119,27 @@ const ManagerOrders = () => {
             </div>
             {isFormDelete && (
                 <div className="absolute bg-blue-100 top-1/2 left-1/2 transform -translate-x-2/4 bg-white shadow-sm rounded-2xl px-8 pt-6 pb-8 mb-4 w-2/4 z-10">
-                    <h1 className="text-center text-2xl font-bold mb-8">Bạn có chắc chắn muốn xóa không?</h1>
+                    <h1 className="text-center text-2xl font-bold mb-8">Are you sure you want to delete?</h1>
                     <div className="flex justify-center">
                         <button onClick={confirmDeleteOeder} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-32 rounded-full mt-6 mr-4">
-                            Xác nhận
+                            OK
                         </button>
                         <button onClick={handleShowFormDel} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-32 rounded-full mt-6 ml-4">
-                            Hủy bỏ
+                            Cancel
                         </button>
                     </div>
                 </div>
             )}
             {isFormDetail && (
                 <div className="absolute top-1/4 left-1/2 transform -translate-x-2/4 bg-blue-100 shadow-sm rounded-2xl px-8 pt-6 pb-8 mb-4 w-3/4 z-10">
-                <h1 className="text-center text-2xl font-bold mb-6">Chi tiết</h1>
+                <h1 className="text-center text-2xl font-bold mb-6">DETAIL</h1>
                 <div className ="w-full">
                     {infoUser.map((value, index) => {
                         return(
                             <div key={index} className="w-1/2 mr-4 w-full">
                                 <div className="flex">
                                     <label className="block text-gray-700 font-bold mb-2 text-xl mr-2">
-                                        Tên:
+                                        Name:
                                     </label> 
                                     <label className="block text-gray-700 font-bold mb-2 text-xl">
                                         {value.nameUser}
@@ -138,7 +147,7 @@ const ManagerOrders = () => {
                                 </div>
                                 <div className="flex">
                                     <label className="block text-gray-700 font-bold mb-2 text-xl mr-2">
-                                        Số điện thoại:
+                                        Phone number:
                                     </label>  
                                     <label className="block text-gray-700 font-bold mb-2 text-xl">
                                         {value.numberUser}
@@ -146,7 +155,7 @@ const ManagerOrders = () => {
                                 </div>
                                 <div className="flex">
                                     <label className="block text-gray-700 font-bold mb-2 text-xl mr-2">
-                                        Địa chỉ:
+                                        Address:
                                     </label>
                                     <label className="block text-gray-700 text-xl font-bold mb-2">
                                         {value.addressUser}
@@ -183,11 +192,12 @@ const ManagerOrders = () => {
                 </div>
                     <div className="flex justify-center">
                         <button onClick={cancelFormDetail} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-32 rounded-full mt-6">
-                        Hủy bỏ
+                        Cancel
                         </button>
                     </div>
             </div>
             )}
+            <ToastContainer/>
         </div>
     );
 };

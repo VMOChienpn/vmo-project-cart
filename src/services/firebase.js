@@ -1,4 +1,5 @@
 import firebase from "firebase/app";
+import "firebase/database";
 
 var config = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -14,9 +15,5 @@ if (!firebase.apps.length) {
     firebase.initializeApp(config);
 }
 require('firebase/database')
-
-// const dataFoods = firebase.database().ref('products/' + 'foods');
-// const dataDrinks = firebase.database().ref('products/' + 'drinks');
-// const dataUsers = firebase.database().ref('products/' + 'users');
 
 export default firebase;

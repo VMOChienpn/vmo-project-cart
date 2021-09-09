@@ -16,7 +16,6 @@ import { getFood } from '../../../../services/api';
 const ListFood = () => {
     const isStatusShowCart = useSelector((state) => state.allProducts.isStatusShowCart)
     const isStatusShowInfoProduct = useSelector((state) => state.allProducts.isStatusShowInfoProduct)
-    //const dataFood = useSelector(state => state.allProducts.dataFood)
     const keySearch = useSelector(state => state.allProducts.keySearch)
     const [listFoods, setListFoods] = useState([])
     const showCart = () => {

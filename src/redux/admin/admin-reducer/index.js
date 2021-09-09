@@ -2,11 +2,13 @@ import * as types from "../action/types"
 import firebase from 'firebase'
 
 const initialStateAdmin = {
+    statusLogin: false,
 }
 
 const adminReducer = (state = initialStateAdmin, action) => {
     switch (action.type) {
-
+        case types.LOGIN_STATUS:
+            return { ...state, statusLogin: !state.statusLogin };
         case types.ADD_USER:
             firebase.database().ref('users').push(action.user)
             return state;

@@ -1,49 +1,41 @@
 import React from 'react';
 import {useDispatch} from 'react-redux'
 import { useState, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import "../../../styles/styles.scss"
 import {addProductOrderFirebase, changeStatusShowCart} from '../../../redux/products/action'
 
 const Cart = () => {
     const [dataLocal, setDataLocal] = useState([])
-    const [nameUser, setNameUser] = useState()
-    const [numberUser, setNumberUser] = useState()
-    const [addressUser, setAddressUser] = useState()
     const [showOrderHistory, setShowOrderHistory] = useState([])
     const [btnShowHistory, setBtnShowHistory] = useState(false)
-    const [isSuccess, setIsSuccess] = useState(false)
-    const [isValid, setIsValid] = useState(false)
+    const [detailts, setDetails] = useState({nameUser: "", numberUser: "", addressUser:""})
+    //const [isValid, setIsValid] = useState(false)
 
-
-
-    isSuccess
     const dispatch = useDispatch()
     const closeCart = () => {
         dispatch(changeStatusShowCart())
-        setIsSuccess(!isSuccess) 
     }
     
     const orderProducts = (JSON.parse(localStorage.getItem("order")))
     useEffect(() => {
-        const listOder = [];
-        if(orderProducts !== null){
-            orderProducts.forEach(element => {
-                element.price = element.quantity * element.price
-                listOder.push(element)
-            });      
-        }
-        setDataLocal(listOder)
-        setIsSuccess(false)
+        const listOder = [];  
+        orderProducts.forEach(element => {
+            element.price = element.quantity * element.price
+            listOder.push(element)
+        });      
+        setDataLocal(orderProducts)
         return () => {
-            setDataLocal(listOder)
+            setDataLocal(orderProducts)
         }
     }, [])
-  
+    
+
     const clearProduct = () => {
         dataLocal.length = []
         localStorage.setItem("order", JSON.stringify(dataLocal))
-        setIsSuccess(false)
     }
     const clearHistory = () => {
         dataLocal.length = []
@@ -53,7 +45,6 @@ const Cart = () => {
     const deleteItem = (e) => {
         const filterItem = dataLocal.filter(item => item.id !== e.target.id)
         localStorage.setItem("order", JSON.stringify(filterItem))
-        setIsSuccess(false) 
     }
 
     const numberWithCommas = (x) => {
@@ -68,17 +59,10 @@ const Cart = () => {
         return price
     }
 
-    const getNameUser = (e) => {
-        setNameUser(e.currentTarget.value)
+    const submitHandle = (e) => {
+        e.preventDefault()
     }
 
-    const getNumberUser = (e) => {
-        setNumberUser(e.currentTarget.value)
-    }
-
-    const getAddressUser = (e) => {
-        setAddressUser(e.currentTarget.value)
-    }
     const btnHistory = () => {
         if(localStorage.getItem("ordered") === null){
             localStorage.setItem("ordered", JSON.stringify([]))
@@ -86,29 +70,25 @@ const Cart = () => {
         const listOrdered = JSON.parse(localStorage.getItem("ordered"))
         setShowOrderHistory(listOrdered)
         setBtnShowHistory(!btnShowHistory)
-        setIsSuccess(false) 
     }
     const btnOrder = async() => {
-        if(nameUser !== "" && numberUser !== "" && addressUser !== "") {
-            const listOrdered = await(JSON.parse(localStorage.getItem("ordered")))
-            const infoUser = [];
-            infoUser.push({nameUser: nameUser, numberUser:numberUser, addressUser:addressUser})
-            const orderedInfo = await([...infoUser,...dataLocal]) 
-            dispatch(addProductOrderFirebase(orderedInfo));
-            const listOrder = await(JSON.parse(localStorage.getItem("order")))
-            const orderHistory = await([...listOrder, ...listOrdered])
-            setShowOrderHistory(orderHistory)
-            await(localStorage.setItem("ordered", JSON.stringify(orderHistory)))
-            localStorage.setItem("order", JSON.stringify([]))
-            setIsSuccess(true) 
-            
-        }else{
-            setIsValid(true) 
-        }
+        const listOrdered = await(JSON.parse(localStorage.getItem("ordered")))
+        const orderedInfo = await([detailts,...dataLocal]) 
+        console.log(orderedInfo);
+        dispatch(addProductOrderFirebase(orderedInfo));
+        const listOrder = await(JSON.parse(localStorage.getItem("order")))
+        const orderHistory = await([...listOrder, ...listOrdered])
+        setShowOrderHistory(orderHistory)
+        await(localStorage.setItem("ordered", JSON.stringify(orderHistory)))
+        localStorage.setItem("order", JSON.stringify([]))
+        toast.success("Order Success", {
+            position: "bottom-right",
+        })
     }
 
     return (
-        <aside className="top-0 right-0 w-full md:w-2/5 shadow-2xl bg-white fixed h-full z-30 mt-24 overflow-y-scroll" id="cart-panel">           
+        <aside className="top-0 right-0 w-full md:w-2/5 shadow-2xl bg-white fixed h-full z-30 mt-24 overflow-y-scroll" id="cart-panel">  
+                     
             <div className="p-5 mb-32">
                 <div className="flex justify-between align-center mb-6">
                     <button onClick={closeCart} className="bg-gray-200 py-2 px-6 rounded-full mt-6" id="close-cart-panel"><i className="fas fa-times" /></button>
@@ -149,27 +129,28 @@ const Cart = () => {
                         </tbody>
                     </table>
                     <div className=" w-fill my-4 border-input"/>
-                    <div className="w-7/12 mx-auto">
+                    <form onSubmit={submitHandle} className="w-7/12 mx-auto">
                         <p className="text-xl">Consignee information </p>
                         <div className="bg-white pt-4">
                             <div className="mb-4 flex">
-                                <input onChange={getNameUser} className="border-input rounded w-full py-2 px-3 text-gray-700 focus:outline-none " placeholder="name"/>
+                                <input onChange={(e)=>setDetails({...detailts, nameUser:e.target.value})} className="border-input rounded w-full py-2 px-3 text-gray-700 focus:outline-none " placeholder="name"/>
                             </div>
                             <div className="mb-4">
-                                <input onChange={getNumberUser} className="border-input rounded w-full py-2 px-3 text-gray-700 focus:outline-none " placeholder="phone number" />
+                                <input onChange={(e)=>setDetails({...detailts, numberUser:e.target.value})} className="border-input rounded w-full py-2 px-3 text-gray-700 focus:outline-none " placeholder="phone number" />
                             </div>
                             <div className="mb-4">
-                                <input onChange={getAddressUser} className="border-input rounded w-full py-2 px-3 text-gray-700 focus:outline-none " placeholder="address" />
+                                <input onChange={(e)=>setDetails({...detailts, addressUser:e.target.value})} className="border-input rounded w-full py-2 px-3 text-gray-700 focus:outline-none " placeholder="address" />
                             </div>
                         </div>
-                    </div>
+                        <div className="mt-10 text-lg">Total: <span className="text-custom-yellow">{numberWithCommas(handleTotalPrice())} VNĐ</span></div>
+                        <button onClick={btnOrder} className="rounded-lg bg-custom-yellow px-4 py-2 font-bold mt-6 hover:text-white text-xl transition">ORDER</button>
+                        <ToastContainer/>
+                    </form>
 
                     </>
                 ):(<div className="my-6 font-bold text-xl">No products</div>)}
-                {isValid && (<div className="text-md">Please fill in all fields</div>)}
-                <div className="mt-10 text-lg">Total: <span className="text-custom-yellow">{numberWithCommas(handleTotalPrice())} VNĐ</span></div>
-                <button onClick={btnOrder} className="rounded-lg bg-custom-yellow px-4 py-2 font-bold mt-6 hover:text-white text-xl transition">ORDER</button>
-                {isSuccess && (<div className="text-2xl font-bold text-green-400 mt-5">Order success</div>)}
+                {/* {isValid && (<div className="text-md">Please fill in all fields</div>)} */}
+                
                 </main>
                 {btnShowHistory && (
                 <div className="mt-10 ">
@@ -203,6 +184,7 @@ const Cart = () => {
                 </div>
                 )}
             </div>
+            
         </aside>
 
     );

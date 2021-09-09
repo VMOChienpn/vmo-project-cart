@@ -6,6 +6,7 @@ import { PATH_NULL, PATH_HOME, PATH_FOOD, PATH_DRINK} from '../../routers/router
 
 
 const Header = () => {
+
     return (   
             <div className="fixed top-0 left-0 w-full z-50 sm:flex sm:items-center sm:justify-center bg-custom-yellow md:p-8 md:px-16 pb-mobile">
                 <div className="font-bold uppercase mr-auto flex-mobile p-mobile">

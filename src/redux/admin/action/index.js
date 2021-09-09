@@ -37,3 +37,9 @@ export const deleteProductOrder = (id) => {
         type: types.DELETE_PRODUCT_ORDER, id
     }
 }
+
+export const loginStatus = () => {
+    return {
+        type: types.LOGIN_STATUS
+    }
+}
