@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { loginStatus } from '../../../../redux/admin/action';
 import { getUser } from '../../../../services/api';
 import "./style.scss"
@@ -12,12 +12,11 @@ const FormLogin = () => {
     const [user, setUser] = useState()
     const [isValid, setIsValid] = useState(false)
     const [detailts, setDetails] = useState({name: "", password: ""})
-    const loginStatusa = useSelector(state => state.allAdmin.statusLogin)
     const dispatch = useDispatch()
     const submitHandle = (e) => {
         e.preventDefault()
     }
-    console.log(loginStatusa);
+
     useEffect(() => {
         getUser.on("value", snapshot => {
             const list = []
@@ -28,9 +27,9 @@ const FormLogin = () => {
         })
         setIsValid(false)
     }, [])
-    const login = () => {
-        // localStorage.setItem("accessToken", true)
-        // history.replace(PATH_ADMIN)
+
+    const login = (e) => {
+        e.preventDefault()
         user.forEach(value => {
             if(detailts.name == value.name && detailts.password == value.password){
                 dispatch(loginStatus())
@@ -38,7 +37,7 @@ const FormLogin = () => {
                     name: detailts.name,
                     password: detailts.password
                 })
-                console.log("oke. vào đi em");
+                localStorage.setItem("accessToken", true)
                 history.replace(PATH_ADMIN)
                 setIsValid(false)
             }else{

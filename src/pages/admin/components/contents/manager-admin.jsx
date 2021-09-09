@@ -12,14 +12,13 @@ import { getUser } from '../../../../services/api';
 const ManagerAdmin = () => {
     const [isFormAdd, setIsFormAdd] = useState(false)
     const [isFormDelete, setisFormDelete] = useState(false)
-    const [titleForm, setTitleForm] = useState("")
-    const [btnStatusForm, setBtnStatusForm] = useState("")
-    
-    const [name, setName] = useState("")
-    const [username, setUsername] = useState("")
-    const [password, setPassword] = useState("")
-    
+    const [isFormEdit, setIsFormEdit] = useState(false)
 
+    const [detailts, setDetails] = useState({name: "", username:"", password: ""})
+    const [nameDefault, setNameDefault] = useState("")
+    const [userNameDefault, setUsernameDefault] = useState("")
+    const [passwordDefault, setPasswordDefault] = useState("")
+    
     const [idDelete, setIdDelete] = useState("")
     const [idEdit, setIdEdit] = useState()
 
@@ -45,61 +44,44 @@ const ManagerAdmin = () => {
         })
     }, [])
 
-    const onChangeName = (e) => {
-        setName(e.target.value);
-    }
-    const onChangeUsername = (e) => {
-        setUsername(e.target.value);
-    }
-    const onChangePassword = (e) => {
-        setPassword(e.target.value);
-    }
 
-    const handleShowFormAdd = (id) => {
-        if(id){
-            setIdEdit(id);
-            setTitleForm("EDIT ACCOUNT")
-            setBtnStatusForm("Edit")
-            setIsFormAdd(!isFormAdd)
-            allUser.forEach(value => {
-                if(value.id === id){
-                    setName(value.name)
-                    setUsername(value.username)
-                    setPassword(value.password)
-                }
-            })
-        }else{
-            setTitleForm("ADD NEW ACCOUNT")
-            setBtnStatusForm("Add")           
-            setIsFormAdd(!isFormAdd)
-            setIdEdit(null)
-            
-        }
+    const handleShowFormAdd = () => {     
+        setIsFormAdd(!isFormAdd)                  
     }
 
     const handleShowFormDel = (id) => {
         setIdDelete(id)
         setisFormDelete(!isFormDelete)
     }
+    const handleShowFormEdit = (id) => {
+        setIdEdit(id);
+        allUser.forEach(value => {
+            if(value.id === id){
+                setNameDefault(value.name) 
+                setUsernameDefault(value.username)
+                setPasswordDefault(value.password)               
+            }
+        })
+        setIsFormEdit(!isFormEdit)
+    }
 
     const addBtn = (e) => {   
-        if(idEdit){
-            e.preventDefault()
-            dispatch(editUser(idEdit, {name,username,password}))
-            setIsFormAdd(false)
-            toast.success("Edit Success", {
-                position: "bottom-right",
-            })
-        }else{
-            setIdEdit("")            
-            e.preventDefault()
-            dispatch(addUser({name,username,password}))
-            toast.success("Add Success", {
-                position: "bottom-right",
-            })
-        }   
-        setIdEdit("") 
+        e.preventDefault()
+        dispatch(addUser(detailts))
+        toast.success("Add Success", {
+            position: "bottom-right",
+        })
     }
+    const editBtn = (e) => {   
+        e.preventDefault()
+        if(idEdit){
+            dispatch(editUser(idEdit, detailts))
+        }
+        toast.success("Edit Success", {
+            position: "bottom-right",}
+            )
+    }
+
     const btnDelete = (e) => {
         e.preventDefault()
         dispatch(deleteUser(idDelete))
@@ -108,6 +90,10 @@ const ManagerAdmin = () => {
             position: "bottom-right",
         })
     } 
+    const cancelEdit = (e) => {
+        e.preventDefault()
+        setIsFormEdit(!isFormEdit)
+    }
 
     return (
         <div className="w-full">
@@ -135,10 +121,10 @@ const ManagerAdmin = () => {
                                             <td className="text-left px-4">{value.name}</td>
                                             <td className="text-left px-4">{value.username}</td>
                                             <td className="text-left px-4">
-                                                <input type="password" value={value.password}/>
+                                                <input type="password" defaultValue={value.password}/>
                                             </td>
                                             <td className="flex item-center">
-                                                <button onClick={()=>handleShowFormAdd(value.id)} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-1 rounded-md mr-1">Edit</button>
+                                                <button onClick={()=>handleShowFormEdit(value.id)} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-1 rounded-md mr-1">Edit</button>
                                                 <button onClick={()=>handleShowFormDel(value.id)} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-1 rounded-md mr-4">Delete</button>
                                             </td>
                                         </tr>
@@ -152,35 +138,64 @@ const ManagerAdmin = () => {
             </div>
             {isFormAdd ? (
                 <form className="bg-blue-100 absolute top-1/2 left-1/2 transform -translate-x-2/4 -translate-y-2/4 bg-white shadow-sm rounded-2xl px-8 pt-6 pb-8 mb-4 w-4/12">
-                    <h1 className="text-center text-2xl font-bold mb-8">{titleForm}</h1>
+                    <h1 className="text-center text-2xl font-bold mb-8">ADD NEW ACCOUNT</h1>
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2">
                             Name
                         </label>
-                        <input onChange={onChangeName} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="name" id="name" type="text"/>
+                        <input onChange={(e) => setDetails({...detailts, name: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="name" id="name" type="text"/>
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2">
                             Username
                         </label>
-                        <input onChange={onChangeUsername} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="username" id="username" type="text"/>
+                        <input onChange={(e) => setDetails({...detailts, username: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="username" id="username" type="text"/>
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2">
                             Password
                         </label>
-                        <input onChange={onChangePassword} type="password" className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="password" id="password"/>
+                        <input onChange={(e) => setDetails({...detailts, password: e.target.value})} type="password" className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="password" id="password"/>
                     </div>
                     <div className="flex justify-center">
-                            <button onClick={addBtn} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-32 rounded-full mt-6 mr-4">
-                                {btnStatusForm}
-                            </button>
-                            <button onClick={handleShowFormAdd} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-32 rounded-full mt-6">
-                                Cancel
-                            </button>
-                    </div>                     
-                    {/* {isValid && (<p className="text-red-400 my-2">Tên tài khoản đã tồn tại</p>)} */}
-    
+                        <button onClick={addBtn} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-32 rounded-full mt-6 mr-4">
+                            Add
+                        </button>
+                        <button onClick={handleShowFormAdd} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-32 rounded-full mt-6">
+                            Cancel
+                        </button>
+                    </div>                         
+                </form>
+            ): null}
+            {isFormEdit ? (
+                <form className="bg-blue-100 absolute top-1/2 left-1/2 transform -translate-x-2/4 -translate-y-2/4 bg-white shadow-sm rounded-2xl px-8 pt-6 pb-8 mb-4 w-4/12">
+                    <h1 className="text-center text-2xl font-bold mb-8">EDIT AMIN</h1>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                            Name
+                        </label>
+                        <input onChange={(e) => setDetails({...detailts, name: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="name" id="name" type="text" defaultValue={nameDefault} />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                            Username
+                        </label>
+                        <input onChange={(e) => setDetails({...detailts, username: e.target.value})}  className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="username" id="username" type="text" defaultValue={userNameDefault}/>
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                            Password
+                        </label>
+                        <input onChange={(e) => setDetails({...detailts, password: e.target.value})} type="password" className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="password" id="password" defaultValue={passwordDefault} />
+                    </div>
+                    <div className="flex justify-center">
+                        <button onClick={editBtn} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-32 rounded-full mt-6 mr-4">
+                            Edit
+                        </button>
+                        <button onClick={cancelEdit} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-32 rounded-full mt-6">
+                            Cancel
+                        </button>
+                    </div>                         
                 </form>
             ): null}
             {isFormDelete ? (
