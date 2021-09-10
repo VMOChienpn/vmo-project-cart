@@ -10,12 +10,10 @@ const initialStateProducts = {
     idDrink: "",
     keySearch: "",
     orderProduct: [],
-    dataFoodTest: [],
 }
 
 const productsReducer = (state = initialStateProducts, action) => {
     switch (action.type) {
-
         case types.CHANGE_STATUS_SHOW_CART:
             return { ...state, isStatusShowCart: !state.isStatusShowCart }
         case types.CHANGE_STATUS_SHOW_INFO_PRODUCT:
@@ -27,13 +25,13 @@ const productsReducer = (state = initialStateProducts, action) => {
         case types.GET_KEY_SEARCH:
             return { ...state, keySearch: action.key }
         case types.ADD_PRODUCT:
+            console.log(state.dataLocal)
             if (localStorage.getItem("order") === null) {
                 action.product.quantity = action.valueInputQuantity
                 action.product.notes = action.valueInputNote;
                 state.orderProduct = [action.product];
                 localStorage.setItem("order", JSON.stringify(state.orderProduct))
                 if (state.orderProduct) {
-                    document.getElementById('input').value = ""
                     toast.success("Add to cart successfully", {
                         position: "top-right"
                     })
@@ -45,7 +43,6 @@ const productsReducer = (state = initialStateProducts, action) => {
                 state.orderProduct = [...getItemFromLocal, action.product];
                 localStorage.setItem("order", JSON.stringify(state.orderProduct))
                 if (state.orderProduct) {
-                    document.getElementById('input').value = ""
                     toast.success("Add to cart successfully", {
                         position: "top-right",
                         duration: 2000

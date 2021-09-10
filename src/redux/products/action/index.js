@@ -40,7 +40,7 @@ export const addProduct = (product, valueInputNote, valueInputQuantity) => {
 
 export const deleteProduct = (id, dataLocal) => {
     return {
-        type: types.ADD_PRODUCT, id, dataLocal
+        type: types.DELETE_PRODUCT, id, dataLocal
     }
 }
 

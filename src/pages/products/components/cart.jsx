@@ -19,17 +19,19 @@ const Cart = () => {
         dispatch(changeStatusShowCart())
     }
     
-    const orderProducts = (JSON.parse(localStorage.getItem("order")))
     useEffect(() => {
-        const listOder = [];  
-        orderProducts.forEach(element => {
-            element.price = element.quantity * element.price
-            listOder.push(element)
-        });      
-        setDataLocal(orderProducts)
-        return () => {
-            setDataLocal(orderProducts)
-        }
+        const getProduct = async() => {
+            const orderProducts = await(JSON.parse(localStorage.getItem("order")))
+            if(orderProducts){
+                const listOder = [];  
+                orderProducts.forEach(element => {
+                    element.price = element.quantity * element.price
+                    listOder.push(element)
+                });      
+                setDataLocal(orderProducts)
+            }}
+            getProduct()
+
     }, [])
     
 

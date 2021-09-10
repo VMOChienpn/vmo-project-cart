@@ -72,7 +72,7 @@ const ListFood = () => {
                     <button onClick={showCart} className=" font-bold text-xl rounded-full bg-white mr-6 py-4 px-5 shadow-lg hover:bg-yellow-300 transition-all hover:text-white" ><i className="fas fa-shopping-basket" />
                     </button>
                 </div>
-                {isStatusShowCart?<Cart/>:null}
+                {isStatusShowCart && <Cart/>}
                 <div className="grid lg:grid-cols-3 2xl:grid-cols-5 pb-20 text-gray-900 md:text-center">
                 {isStatusShowInfoProduct?<FoodInfo/>:null}
                     <main className="lg:col-span-5 w-2/3 m-auto">

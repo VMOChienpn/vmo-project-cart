@@ -25,6 +25,10 @@ const ManagerAdmin = () => {
     const dispatch = useDispatch()
     const [allUser, setAllUser] = useState([])
 
+    const [msgName, setMsgName] = useState("")
+    const [msgUsename, setMsgUserName] = useState("")
+    const [msgPassword, setMsgPassword] = useState("")
+
     useEffect(() => {
         getUser.on('value', (snapshot) => {
             const list = []
@@ -44,9 +48,11 @@ const ManagerAdmin = () => {
         })
     }, [])
 
-
     const handleShowFormAdd = () => {     
-        setIsFormAdd(!isFormAdd)                  
+        setIsFormAdd(!isFormAdd)  
+        setMsgName("")
+        setMsgUserName("")
+        setMsgPassword("")               
     }
 
     const handleShowFormDel = (id) => {
@@ -56,30 +62,67 @@ const ManagerAdmin = () => {
     const handleShowFormEdit = (id) => {
         setIdEdit(id);
         allUser.forEach(value => {
-            if(value.id === id){
+            if(value.id === id){ 
                 setNameDefault(value.name) 
                 setUsernameDefault(value.username)
-                setPasswordDefault(value.password)               
+                setPasswordDefault(value.password)    
+                detailts.name = value.name 
+                detailts.username = value.username           
+                detailts.password = value.password           
             }
         })
         setIsFormEdit(!isFormEdit)
     }
 
-    const addBtn = (e) => {   
-        e.preventDefault()
-        dispatch(addUser(detailts))
-        toast.success("Add Success", {
-            position: "bottom-right",
-        })
-    }
-    const editBtn = (e) => {   
-        e.preventDefault()
-        if(idEdit){
-            dispatch(editUser(idEdit, detailts))
+    const addBtn = (e) => {
+        if(detailts.name == ""){
+            setMsgName("This Field is require")
+            e.preventDefault()
         }
-        toast.success("Edit Success", {
-            position: "bottom-right",}
+        else if(detailts.username == ""){
+            setMsgUserName("This Field is require")
+            e.preventDefault()
+        }else if (detailts.password == ""){
+            setMsgPassword("This Field is require")
+            e.preventDefault()
+        }else{
+            e.preventDefault()
+            dispatch(addUser(detailts))
+            setIsFormAdd(!isFormAdd)
+            setDetails({...detailts, password: "", name:"", username:""})
+            toast.success("Add Success", {
+                position: "bottom-right",
+            })
+        }
+    }
+
+    const editBtn = (e) => {
+        if(detailts.name == ""){
+            setMsgName("This Field is require")
+            e.preventDefault()
+        }
+        else if(detailts.username == ""){
+            setMsgUserName("This Field is require")
+            e.preventDefault()
+        }else if (detailts.password == ""){
+            setMsgPassword("This Field is require")
+            e.preventDefault()
+        }else{
+            if(idEdit){
+                dispatch(editUser(idEdit, detailts))
+                e.preventDefault()
+                setIsFormEdit(!isFormEdit)
+                detailts.name = ""
+                detailts.username = ""         
+                detailts.password = ""  
+                setMsgName("")
+                setMsgUserName("")
+                setMsgPassword("") 
+            }
+            toast.success("Edit Success", {
+                position: "bottom-right",}
             )
+        }       
     }
 
     const btnDelete = (e) => {
@@ -93,6 +136,9 @@ const ManagerAdmin = () => {
     const cancelEdit = (e) => {
         e.preventDefault()
         setIsFormEdit(!isFormEdit)
+        setMsgName("")
+        setMsgUserName("")
+        setMsgPassword("")
     }
 
     return (
@@ -120,8 +166,8 @@ const ManagerAdmin = () => {
                                             <td className="text-left px-4">{key}</td>
                                             <td className="text-left px-4">{value.name}</td>
                                             <td className="text-left px-4">{value.username}</td>
-                                            <td className="text-left px-4">
-                                                <input type="password" defaultValue={value.password}/>
+                                            <td className="text-left px-4">******
+                                                
                                             </td>
                                             <td className="flex item-center">
                                                 <button onClick={()=>handleShowFormEdit(value.id)} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-1 rounded-md mr-1">Edit</button>
@@ -139,20 +185,20 @@ const ManagerAdmin = () => {
             {isFormAdd ? (
                 <form className="bg-blue-100 absolute top-1/2 left-1/2 transform -translate-x-2/4 -translate-y-2/4 bg-white shadow-sm rounded-2xl px-8 pt-6 pb-8 mb-4 w-4/12">
                     <h1 className="text-center text-2xl font-bold mb-8">ADD NEW ACCOUNT</h1>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                    <div className="">
+                        <label className="block text-gray-700 text-md font-bold mb-2">
                             Name
                         </label>
                         <input onChange={(e) => setDetails({...detailts, name: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="name" id="name" type="text"/>
                     </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                    <div className="">
+                        <label className="block text-gray-700 text-md font-bold mb-2">
                             Username
                         </label>
                         <input onChange={(e) => setDetails({...detailts, username: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="username" id="username" type="text"/>
                     </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                    <div className="">
+                        <label className="block text-gray-700 text-md font-bold mb-2">
                             Password
                         </label>
                         <input onChange={(e) => setDetails({...detailts, password: e.target.value})} type="password" className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="password" id="password"/>
@@ -168,25 +214,30 @@ const ManagerAdmin = () => {
                 </form>
             ): null}
             {isFormEdit ? (
-                <form className="bg-blue-100 absolute top-1/2 left-1/2 transform -translate-x-2/4 -translate-y-2/4 bg-white shadow-sm rounded-2xl px-8 pt-6 pb-8 mb-4 w-4/12">
+                <form className="bg-blue-100 absolute top-1/2 left-1/2 transform -translate-x-2/4 -translate-y-2/4 bg-white shadow-sm rounded-2xl px-8 pt-6 pb-8  w-4/12">
                     <h1 className="text-center text-2xl font-bold mb-8">EDIT AMIN</h1>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                    <div className="">
+                        <label className="block text-gray-700 text-md font-bold mb-2">
                             Name
                         </label>
                         <input onChange={(e) => setDetails({...detailts, name: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="name" id="name" type="text" defaultValue={nameDefault} />
+                        <p className="font-bold mt-1 text-left text-red-400 text-sm italic">{msgName}</p>
                     </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                    <div className="">
+                        <label className="block text-gray-700 text-md font-bold mb-2">
                             Username
                         </label>
                         <input onChange={(e) => setDetails({...detailts, username: e.target.value})}  className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="username" id="username" type="text" defaultValue={userNameDefault}/>
+                        <p className="font-bold mt-1 text-left text-red-400 text-sm italic">{msgUsename}</p>
+
                     </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                    <div className="">
+                        <label className="block text-gray-700 text-md font-bold mb-2">
                             Password
                         </label>
                         <input onChange={(e) => setDetails({...detailts, password: e.target.value})} type="password" className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="password" id="password" defaultValue={passwordDefault} />
+                        <p className="font-bold mt-1 text-left text-red-400 text-sm italic">{msgPassword}</p>
+
                     </div>
                     <div className="flex justify-center">
                         <button onClick={editBtn} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-32 rounded-full mt-6 mr-4">
@@ -195,7 +246,7 @@ const ManagerAdmin = () => {
                         <button onClick={cancelEdit} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-32 rounded-full mt-6">
                             Cancel
                         </button>
-                    </div>                         
+                    </div>                        
                 </form>
             ): null}
             {isFormDelete ? (
