@@ -55,17 +55,12 @@ const ManagerOrders = () => {
         setIsFormDetail(!isFormDetail)
         firebase.database().ref('products/' + "order").child(id).on('value', snapshot =>{
             const order = snapshot.val();
-            if(order[0]){
                 const getUser = order[0]
                 const list = []
                 list.push(getUser)
                 setInfoUser(list)
                 order.shift()
                 setInfoOrder(order);
-            }   
-            else{
-                return;
-            }
         });
     }
     const cancelFormDetail = () => {
@@ -95,7 +90,7 @@ const ManagerOrders = () => {
                                 <th className="w-3/12 text-left py-3 px-4 uppercase font-semibold text-sm">Name</th>
                                 <th className="w-3/12 text-left py-3 px-4 uppercase font-semibold text-sm">Phone number</th>
                                 <th className="w-3/12 text-left py-3 px-4 uppercase font-semibold text-sm">Address</th>
-                                <th className="w-2/12 text-left py-3 px-4 uppercase font-semibold text-sm"></th>
+                                <th className="w-2/12 text-left py-3 px-4 uppercase font-semibold text-sm">Action</th>
                             </tr>
                         </thead>
                         <tbody className="text-gray-700 ">

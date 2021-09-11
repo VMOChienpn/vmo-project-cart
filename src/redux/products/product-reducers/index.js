@@ -1,8 +1,6 @@
 import * as types from "../action/types"
 import firebase from 'firebase'
 
-import { toast } from "react-toastify"
-
 const initialStateProducts = {
     isStatusShowCart: false,
     isStatusShowInfoProduct: false,
@@ -31,30 +29,15 @@ const productsReducer = (state = initialStateProducts, action) => {
                 action.product.notes = action.valueInputNote;
                 state.orderProduct = [action.product];
                 localStorage.setItem("order", JSON.stringify(state.orderProduct))
-                if (state.orderProduct) {
-                    toast.success("Add to cart successfully", {
-                        position: "top-right"
-                    })
-                }
+
             } else {
                 const getItemFromLocal = JSON.parse(localStorage.getItem('order'))
                 action.product.quantity = action.valueInputQuantity
                 action.product.notes = action.valueInputNote;
                 state.orderProduct = [...getItemFromLocal, action.product];
                 localStorage.setItem("order", JSON.stringify(state.orderProduct))
-                if (state.orderProduct) {
-                    toast.success("Add to cart successfully", {
-                        position: "top-right",
-                        duration: 2000
-                    })
-                }
             }
             return state
-        case types.DELETE_PRODUCT: {
-            const filterItem = action.dataLocal.filter(item => item.id !== action.id)
-            localStorage.setItem("order", JSON.stringify(filterItem))
-            return state
-        }
         case types.ADD_PRODUCT_ORDER_FIREBASE: {
             firebase.database().ref('products/order').push(action.order)
             return state

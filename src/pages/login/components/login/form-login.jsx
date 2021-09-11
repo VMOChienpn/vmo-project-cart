@@ -3,7 +3,7 @@ import { useHistory } from 'react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { loginStatus } from '../../../../redux/admin/action';
-import { getUser } from '../../../../services/api';
+import { getAdmin } from '../../../../services/api';
 import "./style.scss"
 import { PATH_ADMIN } from '../../../../routers/router';
 
@@ -18,7 +18,7 @@ const FormLogin = () => {
     }
 
     useEffect(() => {
-        getUser.on("value", snapshot => {
+        getAdmin.on("value", snapshot => {
             const list = []
             snapshot.forEach(value => {
                 list.push(value.val())

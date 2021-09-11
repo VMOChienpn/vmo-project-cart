@@ -5,7 +5,7 @@ import { ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { addUser, deleteUser, editUser } from '../../../../redux/admin/action';
-import { getUser } from '../../../../services/api';
+import { getAdmin } from '../../../../services/api';
 
 
 
@@ -13,6 +13,8 @@ const ManagerAdmin = () => {
     const [isFormAdd, setIsFormAdd] = useState(false)
     const [isFormDelete, setisFormDelete] = useState(false)
     const [isFormEdit, setIsFormEdit] = useState(false)
+    // const [loading, setLoading] = useState(false)
+
 
     const [detailts, setDetails] = useState({name: "", username:"", password: ""})
     const [nameDefault, setNameDefault] = useState("")
@@ -30,7 +32,8 @@ const ManagerAdmin = () => {
     const [msgPassword, setMsgPassword] = useState("")
 
     useEffect(() => {
-        getUser.on('value', (snapshot) => {
+        //setLoading(true)
+        getAdmin.on('value', (snapshot) => {
             const list = []
             snapshot.forEach((snap) => {
                 const id = snap.key
@@ -44,10 +47,9 @@ const ManagerAdmin = () => {
                     username: username,    
                 })
             })
-            setAllUser(list.reverse())
+            setAllUser(list)
         })
     }, [])
-
     const handleShowFormAdd = () => {     
         setIsFormAdd(!isFormAdd)  
         setMsgName("")
@@ -145,8 +147,8 @@ const ManagerAdmin = () => {
         <div className="w-full">
             <h1 className="text-center text-2xl font-bold ">ADMIN MANAGEMENT</h1>
             <button onClick={()=>handleShowFormAdd()} className="my-5 mr-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">Add</button>
-            <div className=" flex relative">               
-                <div className="bg-white h-full w-full mr-7">
+            <div className=" flex relative">      
+                <div className="bg-white h-full w-full mr-7">  
                     <table className="min-w-full bg-white ">
                         <thead className="bg-gray-500 text-white">
                             <tr>
@@ -154,16 +156,17 @@ const ManagerAdmin = () => {
                                 <th className="w-1/4 text-left py-3 px-4 uppercase font-semibold text-sm">Name</th>
                                 <th className="w-1/4 text-left py-3 px-4 uppercase font-semibold text-sm">Username</th>
                                 <th className="w-1/4 text-left py-3 px-4 uppercase font-semibold text-sm">Password</th>
-                                <th className="w-1/12 text-left py-3 px-4 uppercase font-semibold text-sm"></th>
+                                <th className="w-1/12 text-left py-3 px-4 uppercase font-semibold text-sm">Action</th>
 
                             </tr>
                         </thead>
                         <tbody className="text-gray-700 ">
+                            
                             {allUser.length > 0?(
                                 allUser.map((value, key) => {
                                     return(
                                         <tr key={key}style={{borderBottom:"1px solid gray"}}>
-                                            <td className="text-left px-4">{key}</td>
+                                            <td className="text-left px-4">{key + 1}</td>
                                             <td className="text-left px-4">{value.name}</td>
                                             <td className="text-left px-4">{value.username}</td>
                                             <td className="text-left px-4">******
@@ -190,18 +193,22 @@ const ManagerAdmin = () => {
                             Name
                         </label>
                         <input onChange={(e) => setDetails({...detailts, name: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="name" id="name" type="text"/>
+                        <p className="font-bold mt-1 text-left text-red-400 text-sm italic">{msgName}</p>
                     </div>
                     <div className="">
                         <label className="block text-gray-700 text-md font-bold mb-2">
                             Username
                         </label>
                         <input onChange={(e) => setDetails({...detailts, username: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="username" id="username" type="text"/>
+                        <p className="font-bold mt-1 text-left text-red-400 text-sm italic">{msgUsename}</p>
                     </div>
                     <div className="">
                         <label className="block text-gray-700 text-md font-bold mb-2">
                             Password
                         </label>
                         <input onChange={(e) => setDetails({...detailts, password: e.target.value})} type="password" className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" name="password" id="password"/>
+                        <p className="font-bold mt-1 text-left text-red-400 text-sm italic">{msgPassword}</p>
+
                     </div>
                     <div className="flex justify-center">
                         <button onClick={addBtn} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-32 rounded-full mt-6 mr-4">

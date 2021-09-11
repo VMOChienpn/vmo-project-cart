@@ -5,23 +5,70 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import "../../../styles/styles.scss"
-import {addProductOrderFirebase, changeStatusShowCart} from '../../../redux/products/action'
+import {addProductOrderFirebase, changeStatusShowCart, deleteProduct} from '../../../redux/products/action'
 
 const Cart = () => {
     const [dataLocal, setDataLocal] = useState([])
     const [showOrderHistory, setShowOrderHistory] = useState([])
     const [btnShowHistory, setBtnShowHistory] = useState(false)
+    const [showFormDelete, setShowFormDelete] = useState(false)
+    const [idDelete, setIdDelete] = useState("")
+
+
     const [detailts, setDetails] = useState({nameUser: "", numberUser: "", addressUser:""})
-    //const [isValid, setIsValid] = useState(false)
+    const [isValid, setIsValid] = useState(false)
 
     const dispatch = useDispatch()
     const closeCart = () => {
         dispatch(changeStatusShowCart())
     }
-    
+
     useEffect(() => {
-        const getProduct = async() => {
-            const orderProducts = await(JSON.parse(localStorage.getItem("order")))
+        const orderProducts = JSON.parse(localStorage.getItem("order"))
+        if(orderProducts){
+            const listOder = [];  
+            orderProducts.forEach(element => {
+                element.price = element.quantity * element.price
+                listOder.push(element)
+            });      
+            setDataLocal(orderProducts)
+        }
+    }, [])
+    
+    const clearHistory = () => {
+        dataLocal.length = []
+        localStorage.setItem("ordered", JSON.stringify(dataLocal))
+        ;(function(){
+            const history = JSON.parse(localStorage.getItem("ordered"))
+            if(history){
+                const listOder = [];  
+                history.forEach(element => {
+                    listOder.push(element)
+                });      
+                setShowOrderHistory(listOder)
+            }
+        }())
+    }
+
+    const cancelDelete = (e) => {
+        e.preventDefault()
+        setShowFormDelete(!showFormDelete)
+    } 
+    const deleteItem = (id) => {
+        setIdDelete(id);
+        setShowFormDelete(!showFormDelete)
+        // const filterItem = dataLocal.filter(item => item.id !== e.target.id)
+        // localStorage.setItem("order", JSON.stringify(filterItem))
+    }
+
+    const deleteBtn = (e) => {
+        e.preventDefault()
+        setShowFormDelete(!showFormDelete)
+        // const filterItem = dataLocal.filter(item => item.id !== idDelete)
+        // localStorage.setItem("order", JSON.stringify(filterItem))
+        dispatch(deleteProduct(idDelete, dataLocal))
+        ;(function(){
+            const orderProducts = JSON.parse(localStorage.getItem("order"))
             if(orderProducts){
                 const listOder = [];  
                 orderProducts.forEach(element => {
@@ -29,24 +76,8 @@ const Cart = () => {
                     listOder.push(element)
                 });      
                 setDataLocal(orderProducts)
-            }}
-            getProduct()
-
-    }, [])
-    
-
-    const clearProduct = () => {
-        dataLocal.length = []
-        localStorage.setItem("order", JSON.stringify(dataLocal))
-    }
-    const clearHistory = () => {
-        dataLocal.length = []
-        localStorage.setItem("ordered", JSON.stringify(dataLocal))
-    }
-
-    const deleteItem = (e) => {
-        const filterItem = dataLocal.filter(item => item.id !== e.target.id)
-        localStorage.setItem("order", JSON.stringify(filterItem))
+            }
+        }())
     }
 
     const numberWithCommas = (x) => {
@@ -74,18 +105,35 @@ const Cart = () => {
         setBtnShowHistory(!btnShowHistory)
     }
     const btnOrder = async() => {
-        const listOrdered = await(JSON.parse(localStorage.getItem("ordered")))
-        const orderedInfo = await([detailts,...dataLocal]) 
-        console.log(orderedInfo);
-        dispatch(addProductOrderFirebase(orderedInfo));
-        const listOrder = await(JSON.parse(localStorage.getItem("order")))
-        const orderHistory = await([...listOrder, ...listOrdered])
-        setShowOrderHistory(orderHistory)
-        await(localStorage.setItem("ordered", JSON.stringify(orderHistory)))
-        localStorage.setItem("order", JSON.stringify([]))
-        toast.success("Order Success", {
-            position: "bottom-right",
-        })
+        if(detailts.nameUser == "" || detailts.numberUser == "" || detailts.addressUser == ""){
+            setIsValid(true)
+        }else{
+            const listOrdered = await(JSON.parse(localStorage.getItem("ordered")))
+            const orderedInfo = await([detailts,...dataLocal]) 
+            console.log(orderedInfo);
+            dispatch(addProductOrderFirebase(orderedInfo));
+            //const listOrder = await(JSON.parse(localStorage.getItem("order")))
+            const orderHistory = await([...dataLocal, ...listOrdered])
+            setShowOrderHistory(orderHistory)
+            await(localStorage.setItem("ordered", JSON.stringify(orderHistory)))
+            localStorage.setItem("order", JSON.stringify([]))
+            toast.success("Order Success", {
+                position: "bottom-right",
+            })
+            setTimeout(() => {
+                ;(function(){
+                    const orderProducts = JSON.parse(localStorage.getItem("order"))
+                    if(orderProducts){
+                        const listOder = [];  
+                        orderProducts.forEach(element => {
+                            element.price = element.quantity * element.price
+                            listOder.push(element)
+                        });      
+                        setDataLocal(orderProducts)
+                    }
+                }())               
+            }, 1500);
+        }
     }
 
     return (
@@ -96,7 +144,6 @@ const Cart = () => {
                     <button onClick={closeCart} className="bg-gray-200 py-2 px-6 rounded-full mt-6" id="close-cart-panel"><i className="fas fa-times" /></button>
                     <div>
                         <button onClick={btnHistory} className="rounded-lg bg-custom-yellow px-4 py-2 font-bold mt-6 hover:text-white text-xl transition mr-2">Order history</button>
-                        <button onClick={clearProduct} className="rounded-lg bg-custom-yellow px-4 py-2 font-bold mt-6 hover:text-white text-xl transition">Clear Order</button>
                     </div>
                 </div>
                 <main className="text-center font-bold">
@@ -123,7 +170,7 @@ const Cart = () => {
                                         <td className="text-left border border-gray-400 px-1 break-all w-3/12">{numberWithCommas(value.price)} VNĐ</td>
                                         <td className="text-left border border-gray-400 px-1 break-all w-4/12">{value.notes}</td>  
                                         <td className="text-left border border-gray-400 px-1  w-4/12">
-                                            <button  id={value.id} onClick={deleteItem} className="rounded-lg bg-custom-yellow px-3 py-3 hover:text-white transition fas fa-trash-alt"></button>
+                                            <button  onClick={()=>deleteItem(value.id)} className="rounded-lg bg-custom-yellow px-3 py-3 hover:text-white transition fas fa-trash-alt"></button>
                                         </td>   
                                     </tr>
                                 )
@@ -135,7 +182,7 @@ const Cart = () => {
                         <p className="text-xl">Consignee information </p>
                         <div className="bg-white pt-4">
                             <div className="mb-4 flex">
-                                <input onChange={(e)=>setDetails({...detailts, nameUser:e.target.value})} className="border-input rounded w-full py-2 px-3 text-gray-700 focus:outline-none " placeholder="name"/>
+                                <input onChange={(e)=>setDetails({...detailts, nameUser:e.target.value})} className="border-input rounded w-full py-2 px-3 text-gray-700 focus:outline-none " placeholder="name" />
                             </div>
                             <div className="mb-4">
                                 <input onChange={(e)=>setDetails({...detailts, numberUser:e.target.value})} className="border-input rounded w-full py-2 px-3 text-gray-700 focus:outline-none " placeholder="phone number" />
@@ -151,7 +198,7 @@ const Cart = () => {
 
                     </>
                 ):(<div className="my-6 font-bold text-xl">No products</div>)}
-                {/* {isValid && (<div className="text-md">Please fill in all fields</div>)} */}
+                {isValid && (<div className="text-md text-red-400 my-3 italic">Please fill in all fields</div>)}
                 
                 </main>
                 {btnShowHistory && (
@@ -166,18 +213,16 @@ const Cart = () => {
                             <th className="px-1">Note</th>
                         </tr>
                         </thead>
-                        <tbody>
-                       
+                        <tbody>                     
                             {showOrderHistory.map((value, key) => {   
-                                return(
-                                    
-                                        <tr key={key}>
-                                            <td className="text-left border border-gray-400 px-1 w-3/12 break-all">{value.name}</td>
-                                            <td className="border border-gray-400 px-1 break-all w-2/12">{value.quantity}</td>
-                                            <td className="text-left border border-gray-400 px-1 break-all w-3/12">{numberWithCommas(value.price * value.quantity)} VNĐ</td>
-                                            <td className="text-left border border-gray-400 px-1 break-all w-4/12">{value.notes}</td>    
-                                        </tr>
-                                    )
+                                return(                                    
+                                    <tr key={key}>
+                                        <td className="text-left border border-gray-400 px-1 w-3/12 break-all">{value.name}</td>
+                                        <td className="border border-gray-400 px-1 break-all w-2/12">{value.quantity}</td>
+                                        <td className="text-left border border-gray-400 px-1 break-all w-3/12">{numberWithCommas(value.price * value.quantity)} VNĐ</td>
+                                        <td className="text-left border border-gray-400 px-1 break-all w-4/12">{value.notes}</td>    
+                                    </tr>
+                                )
                             })}
                         
                         </tbody>
@@ -186,7 +231,19 @@ const Cart = () => {
                 </div>
                 )}
             </div>
-            
+            {showFormDelete && (
+                <form className="bg-yellow-100 absolute top-1/3 left-1/2 transform -translate-x-2/4 -translate-y-2/4 bg-white shadow-sm rounded-2xl px-8 pt-6 pb-8 mb-4 w-2/4 z-10">
+                    <h1 className="text-center text-2xl font-bold mb-8">Do you want to delete this product?</h1>
+                    <div className="flex justify-center">
+                        <button onClick={deleteBtn} className="flex justify-center bg-yellow-300 hover:bg-yellow-400 text-white font-bold py-2 w-32 rounded-full mt-6 transition-all mr-4">
+                            Delete
+                        </button>
+                        <button onClick={cancelDelete} className="flex justify-center bg-yellow-300 hover:bg-yellow-400 text-white font-bold py-2 w-32 rounded-full mt-6 transition-all">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            )}          
         </aside>
 
     );

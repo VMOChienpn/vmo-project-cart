@@ -26,7 +26,8 @@ const DrinkInfo = () => {
         if(valueInputQuatity === ""){
             setIsValid(true)
         }else{
-            dispatch(addProduct(drink, valueInputNote, valueInputQuatity))       
+            dispatch(addProduct(drink, valueInputNote, valueInputQuatity))  
+            dispatch(changeStatusShowInfoProduct())     
         }        
     }
     const handleInputQuantity = (e) => {

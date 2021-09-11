@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+//import debounce from 'lodash.debounce';
 
 import "../../../styles/styles.scss"
 import { getKeySearch } from '../../../redux/products/action';
@@ -7,9 +8,10 @@ import { getKeySearch } from '../../../redux/products/action';
 const Search = () => {
     const dispatch = useDispatch()
     const handleOnChange = (e) => {
-        const keySearch = e.target.value
-        dispatch(getKeySearch(keySearch))     
+        const keySearch = e.target.value 
+        dispatch(getKeySearch(keySearch))                  
     }
+
     return (
         <div className="md:w-7/12 xl:w-4/12 w-full-mobile">
             <div className="bg-white flex items-center rounded-full shadow-xl mx-5">

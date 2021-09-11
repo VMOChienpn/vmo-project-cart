@@ -22,6 +22,11 @@ const Drink = () => {
     const [drink, setDrink] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
     const [postsPerPage] = useState(5)
+    const [nameMsg, setNameMsg] = useState("")
+    const [descriptionMsg, setDescriptionMsg] = useState("")
+    const [imageMsg, setImageMsg] = useState("")
+    const [priceMsg, setPriceMsg] = useState("")
+    const [rateMsg, setRateMsg] = useState()
     const [detailtFormAdd, setdetailFormAdd] = useState({name: "", 
         description: "", 
         price:"", 
@@ -76,6 +81,12 @@ const Drink = () => {
 
     const showFormAdd = () => {
         setIsFormAdd(!isFormAdd)
+        setNameMsg("")
+        setDescriptionMsg("")
+        setImageMsg("")
+        setPriceMsg("")
+        setRateMsg("")
+        setdetailFormAdd({...detailtFormAdd, name:"", description:"", image: "", price:"", rate:""})
     }
     const showFormDelete = (id) => {
         setIdDelete(id)
@@ -90,31 +101,76 @@ const Drink = () => {
                 setPrice(value.price)
                 setRate(value.rate)
                 setImage(value.image)
+                detailtFormEdit.name = value.name
+                detailtFormEdit.description = value.description
+                detailtFormEdit.price = value.price
+                detailtFormEdit.rate = value.rate
+                detailtFormEdit.image = value.image
             }
         })
         setisFormEdit(!isFormDelete)
+        setNameMsg("")
+        setDescriptionMsg("")
+        setImageMsg("")
+        setPriceMsg("")
+        setRateMsg("")
     }
     const cancelEdit = (e) => {
         e.preventDefault()
         setisFormEdit(!isFormEdit)
     }
-    const submitFormAdd = (e) => {
-        e.preventDefault()
-    }
     const submitFormDelete = (e) => {
         e.preventDefault()
     }    
-    const addBtn = () => {
-        dispatch(addProductAdmin("drinks", detailtFormAdd))
-        toast.success("Add Success", {
-            position: "bottom-right",
-        })
+    const addBtn = (e) => {
+        if(detailtFormAdd.name == ""){
+            setNameMsg("This Field is require")
+            e.preventDefault()
+        }else if(detailtFormAdd.description == ""){
+            setDescriptionMsg("This Field is require")
+            e.preventDefault()
+        }else if(detailtFormAdd.image == ""){
+            setImageMsg("This Field is require")
+            e.preventDefault()
+        }else if(detailtFormAdd.price == ""){
+            setPriceMsg("This Field is require")
+            e.preventDefault()
+        }else if(detailtFormAdd.rate == ""){
+            setRateMsg("This Field is require")
+            e.preventDefault()
+        }else{
+            dispatch(addProductAdmin("drinks", detailtFormAdd))
+            toast.success("Add Success", {
+                position: "bottom-right",
+            })
+            setIsFormAdd(!isFormAdd)
+        }
+
     }
-    const editBtn = () => {
-        dispatch(editProductAdmin("drinks", idEdit, detailtFormEdit))
-        toast.success("Edit Success", {
-            position: "bottom-right",
-        })
+    const editBtn = (e) => {
+        if(detailtFormEdit.name == ""){
+            setNameMsg("This Field is require")
+            e.preventDefault()
+        }else if(detailtFormEdit.description == ""){
+            setDescriptionMsg("This Field is require")
+            e.preventDefault()
+        }else if(detailtFormEdit.image == ""){
+            setImageMsg("This Field is require")
+            e.preventDefault()
+        }else if(detailtFormEdit.price == ""){
+            setPriceMsg("This Field is require")
+            e.preventDefault()
+        }else if(detailtFormEdit.rate == ""){
+            setRateMsg("This Field is require")
+            e.preventDefault()
+        }else{
+            dispatch(editProductAdmin("drinks", idEdit, detailtFormEdit))
+            toast.success("Edit Success", {
+                position: "bottom-right",
+            })
+            setisFormEdit(!isFormEdit)
+        }
+
     }
     const DeleteBtn = (e) => {
         e.preventDefault()
@@ -140,12 +196,12 @@ const Drink = () => {
                         <thead className="bg-gray-500 text-white">
                             <tr>
                                 <th className="w-1/12 text-left py-3 px-4 uppercase font-semibold text-sm">ID</th>
-                                <th className="w-1/12 text-left py-3 px-4 uppercase font-semibold text-sm">Name</th>
-                                <th className="w-6/12 text-left py-3 px-4 uppercase font-semibold text-sm">Desciption</th>
+                                <th className="w-2/12 text-left py-3 px-4 uppercase font-semibold text-sm">Name</th>
+                                <th className="w-5/12 text-left py-3 px-4 uppercase font-semibold text-sm">Desciption</th>
                                 <th className="w-1/12 text-left py-3 px-4 uppercase font-semibold text-sm">Image</th>
                                 <th className="w-1/12 text-left py-3 px-4 uppercase font-semibold text-sm">Price</th>
-                                <th className="w-1/12 text-left py-3 px-4 uppercase font-semibold text-sm">Rate</th>
-                                <th className="w-2/12 text-left py-3 px-4 uppercase font-semibold text-sm"></th>
+                                <th className="w-2/12 text-left py-3 px-4 uppercase font-semibold text-sm">Rate</th>
+                                <th className="w-1/12 text-left py-3 px-4 uppercase font-semibold text-sm">Action</th>
                             </tr>
                         </thead>
                         <tbody className="text-gray-700">
@@ -161,7 +217,7 @@ const Drink = () => {
                                             </td>
                                             <td className="text-left py-3 px-4">{value.price}</td>
                                             <td className="text-left py-3 px-4">{value.rate}</td>
-                                            <td className="flex item-center jutify-center">
+                                            <td className="flex item-center jutify-center relative translate-y-1/2 transform">
                                                 <button onClick={()=>showFormEdit(value.id)} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-1 rounded-md mr-1">Edit</button>
                                                 <button onClick={()=>showFormDelete(value.id)} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-1 rounded-md mr-1">Delete</button>
                                             </td>
@@ -175,7 +231,7 @@ const Drink = () => {
                 </div>            
             </div>
             {isFormAdd && (
-                <form type="onSubmit" onClick={submitFormAdd} className="absolute top-1/2 left-1/2 transform -translate-x-2/4 -translate-y-2/4  bg-blue-100 shadow-sm rounded-2xl px-8 pt-6 pb-8 mb-4 w-2/4 z-10">
+                <form type="onSubmit" className="absolute top-1/2 left-1/2 transform -translate-x-2/4 -translate-y-2/4  bg-blue-100 shadow-sm rounded-2xl px-8 pt-6 pb-8 mb-4 w-2/4 z-10">
                     <h1 className="text-center text-2xl font-bold mb-6">ADD NEW PRODUCT</h1>
                     <div className ="flex">
                         <div className="w-1/2 mr-4">
@@ -183,19 +239,22 @@ const Drink = () => {
                                 <label className="block text-gray-700 text-sm font-bold mb-2">
                                     Name
                                 </label>
-                                <input onChange={(e) => setdetailFormAdd({...detailtFormAdd, name: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" id="" type="text"/>
+                                <input onChange={(e) => setdetailFormAdd({...detailtFormAdd, name: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" id="" type="text" placeholder="Coffe..."/>
+                                <p className="font-bold mt-1 text-left text-red-400 text-sm italic">{nameMsg}</p>
                             </div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2">
                                     description
                                 </label>
-                                <input onChange={(e) => setdetailFormAdd({...detailtFormAdd, description: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text"/>
+                                <input onChange={(e) => setdetailFormAdd({...detailtFormAdd, description: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text" placeholder="tasty"/>
+                                <p className="font-bold mt-1 text-left text-red-400 text-sm italic">{descriptionMsg}</p>
                             </div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2">
                                     Image
                                 </label>
-                                <input onChange={(e) => setdetailFormAdd({...detailtFormAdd, image: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text"/>
+                                <input onChange={(e) => setdetailFormAdd({...detailtFormAdd, image: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text" placeholder="Link Image..."/>
+                                <p className="font-bold mt-1 text-left text-red-400 text-sm italic">{imageMsg}</p>
                             </div>
                         </div>
                         <div className="w-1/2">                              
@@ -203,13 +262,15 @@ const Drink = () => {
                                 <label className="block text-gray-700 text-sm font-bold mb-2">
                                     Price
                                 </label>
-                                <input onChange={(e) => setdetailFormAdd({...detailtFormAdd, price: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text"/>
+                                <input onChange={(e) => setdetailFormAdd({...detailtFormAdd, price: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text" placeholder="50000"/>
+                                <p className="font-bold mt-1 text-left text-red-400 text-sm italic">{priceMsg} </p>
                             </div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2">
                                     Rate
                                 </label>
-                                <input onChange={(e) => setdetailFormAdd({...detailtFormAdd, rate: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text"/>
+                                <input onChange={(e) => setdetailFormAdd({...detailtFormAdd, rate: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="number" min="1" max="5"  placeholder="5"/>
+                                <p className="font-bold mt-1 text-left text-red-400 text-sm italic" >{rateMsg}</p>
                             </div>
                         </div>
                     </div>
@@ -233,18 +294,21 @@ const Drink = () => {
                                     Name
                                 </label>
                                 <input onChange={(e) => setDetailFormEdit({...detailtFormEdit, name: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text" defaultValue={name}/>
+                                <p className="font-bold mt-1 text-left text-red-400 text-sm italic">{nameMsg}</p>
                             </div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2">
                                     Description
                                 </label>
                                 <input onChange={(e) => setDetailFormEdit({...detailtFormEdit, description: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text" defaultValue={description}/>
+                                <p className="font-bold mt-1 text-left text-red-400 text-sm italic">{descriptionMsg}</p>
                             </div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2">
                                     Image
                                 </label>
                                 <input onChange={(e) => setDetailFormEdit({...detailtFormEdit, image: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text" defaultValue={image}/>
+                                <p className="font-bold mt-1 text-left text-red-400 text-sm italic">{imageMsg}</p>
                             </div>
                         </div>
                         <div className="w-1/2">                              
@@ -253,12 +317,14 @@ const Drink = () => {
                                     Price
                                 </label>
                                 <input onChange={(e) => setDetailFormEdit({...detailtFormEdit, price: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text" defaultValue={price}/>
+                                <p className="font-bold mt-1 text-left text-red-400 text-sm italic">{priceMsg}</p>
                             </div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2">
                                     Rate
                                 </label>
-                                <input onChange={(e) => setDetailFormEdit({...detailtFormEdit, rate: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="text" defaultValue={rate}/>
+                                <input onChange={(e) => setDetailFormEdit({...detailtFormEdit, rate: e.target.value})} className="shadow border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" id="" type="number" min="1" max="5" defaultValue={rate}/>
+                                <p className="font-bold mt-1 text-left text-red-400 text-sm italic">{rateMsg}</p>
                             </div>
                         </div>
                     </div>

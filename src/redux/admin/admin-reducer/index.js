@@ -11,13 +11,13 @@ const adminReducer = (state = initialStateAdmin, action) => {
             return { ...state, statusLogin: !state.statusLogin };
 
         case types.ADD_USER:
-            firebase.database().ref('users').push(action.user)
+            firebase.database().ref('admin').push(action.user)
             return state;
         case types.DELETE_USER:
-            firebase.database().ref('users').child(action.id).remove();
+            firebase.database().ref('admin').child(action.id).remove();
             return state;
         case types.EDIT_USER:
-            firebase.database().ref('users').child(action.id).update(action.user)
+            firebase.database().ref('admin').child(action.id).update(action.user)
             return state;
 
         case types.ADD_PRODUCT_ADMIN:
