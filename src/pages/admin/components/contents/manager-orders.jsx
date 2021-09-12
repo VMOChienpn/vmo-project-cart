@@ -44,7 +44,7 @@ const ManagerOrders = () => {
         setIdDelete(id)      
     }
 
-    const confirmDeleteOeder = () => {
+    const confirmDeleteOrder = () => {
         dispatch(deleteProductOrder(idDelete))
         setIsFormDelete(!isFormDelete)
         toast.success("Delete Success", {
@@ -53,15 +53,16 @@ const ManagerOrders = () => {
     }
     const handleShowFormDetail = (id) => {
         setIsFormDetail(!isFormDetail)
-        firebase.database().ref('products/' + "order").child(id).on('value', snapshot =>{
+        firebase.database().ref('products/' + "order").child(id).once('value', snapshot => {
             const order = snapshot.val();
-                const getUser = order[0]
-                const list = []
-                list.push(getUser)
-                setInfoUser(list)
-                order.shift()
-                setInfoOrder(order);
+            const getUser = order.shift()
+            const list = []
+            list.push(getUser)
+            setInfoUser(list)
+            order.shift()
+            setInfoOrder(order);
         });
+        console.log(1);
     }
     const cancelFormDetail = () => {
         setIsFormDetail(!isFormDetail)      
@@ -116,7 +117,7 @@ const ManagerOrders = () => {
                 <div className="absolute bg-blue-100 top-1/2 left-1/2 transform -translate-x-2/4 bg-white shadow-sm rounded-2xl px-8 pt-6 pb-8 mb-4 w-2/4 z-10">
                     <h1 className="text-center text-2xl font-bold mb-8">Are you sure you want to delete?</h1>
                     <div className="flex justify-center">
-                        <button onClick={confirmDeleteOeder} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-32 rounded-full mt-6 mr-4">
+                        <button onClick={confirmDeleteOrder} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-32 rounded-full mt-6 mr-4">
                             OK
                         </button>
                         <button onClick={handleShowFormDel} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-32 rounded-full mt-6 ml-4">
