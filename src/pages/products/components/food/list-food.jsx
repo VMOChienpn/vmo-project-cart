@@ -64,6 +64,9 @@ const ListFood = () => {
             return value;
         } 
     })
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
     return (
         <div className="bg-gray-100" style={{minHeight:"85vh"}}>
             <div className=" mt-28 mt-32-mobile relative">
@@ -92,7 +95,7 @@ const ListFood = () => {
                                                             <span className="font-bold text-2xl">{food.name}</span>
                                                             <span className="block text-gray-600 text-md max-h-6 overflow-hiden truncate">{food.description}</span>
                                                             <div className="flex justify-between text-center mt-5">
-                                                                <span className="block text-custom-yellow  font-bold text-md"><i className="fas fa-tags"></i> {food.price} Đ</span>
+                                                                <span className="block text-custom-yellow  font-bold text-md"><i className="fas fa-tags"></i> {numberWithCommas(food.price)} Đ</span>
                                                                 <span className="block text-custom-yellow font-bold text-md"> <i className="fas fa-star"></i> {food.rate}</span>
                                                         </div>
                                                     </div>

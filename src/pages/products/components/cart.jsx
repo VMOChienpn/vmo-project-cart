@@ -110,7 +110,6 @@ const Cart = () => {
         }else{
             const listOrdered = await(JSON.parse(localStorage.getItem("ordered")))
             const orderedInfo = await([detailts,...dataLocal]) 
-            console.log(orderedInfo);
             dispatch(addProductOrderFirebase(orderedInfo));
             //const listOrder = await(JSON.parse(localStorage.getItem("order")))
             const orderHistory = await([...dataLocal, ...listOrdered])
@@ -120,6 +119,7 @@ const Cart = () => {
             toast.success("Order Success", {
                 position: "bottom-right",
             })
+            setIsValid(false)
             setTimeout(() => {
                 ;(function(){
                     const orderProducts = JSON.parse(localStorage.getItem("order"))

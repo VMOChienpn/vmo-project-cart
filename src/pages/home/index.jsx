@@ -19,6 +19,7 @@ const index = () => {
                     <Route exact path={PATH_HOME} component={Home} />
                     <Route exact path={PATH_FOOD} component={ListFood} />
                     <Route exact path={PATH_DRINK} component={ListDrink} />
+
                 </Switch>
             <Footer/>          
         </div>

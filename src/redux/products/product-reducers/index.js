@@ -38,6 +38,12 @@ const productsReducer = (state = initialStateProducts, action) => {
                 localStorage.setItem("order", JSON.stringify(state.orderProduct))
             }
             return state
+
+        case types.DELETE_PRODUCT: {
+            const filterItem = action.dataLocal.filter(item => item.id !== action.id)
+            localStorage.setItem("order", JSON.stringify(filterItem))
+            return state
+        }
         case types.ADD_PRODUCT_ORDER_FIREBASE: {
             firebase.database().ref('products/order').push(action.order)
             return state

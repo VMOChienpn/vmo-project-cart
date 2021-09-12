@@ -36,7 +36,9 @@ const TopSelling = () => {
         })
     }, [])
 
-
+    const numberWithCommas = (x) => {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
     return (
         <div className="md:p-16 pt-mobile">
             <div className="font-bold text-mobile text-center md:text-2xl xl:text-5xl pb-mobile mb-5">
@@ -55,7 +57,7 @@ const TopSelling = () => {
                                                 <span className="font-bold text-2xl truncate">{element.name}</span>
                                                 <span className="block text-gray-600 text-md max-h-6 overflow-hiden truncate">{element.description}</span>
                                                 <div className="flex justify-between text-center mt-5">
-                                                    <span className="block text-custom-yellow  font-bold text-md"><i className="fas fa-tags"></i> {element.price} Đ</span>
+                                                    <span className="block text-custom-yellow  font-bold text-md"><i className="fas fa-tags"></i> {numberWithCommas(element.price)} Đ</span>
                                                     <span className="block text-custom-yellow font-bold text-md"> <i className="fas fa-star"></i> {element.rate}</span>
                                                 </div>
                                             </div>

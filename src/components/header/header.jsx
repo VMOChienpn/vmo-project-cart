@@ -19,7 +19,7 @@ const Header = () => {
                 <div className="font-bold text-2xl flex-mobile md:flex md:justify-center">
                     <Link to={PATH_HOME} className="py-2 px-5 transition-option hover:text-white ">Home</Link>
                     <Link to={PATH_FOOD} className="py-2 px-5 transition-option hover:text-white ">Food</Link>
-                    <Link to={PATH_DRINK} className="py-2 px-5 transition-option hover:text-white ">Drink</Link>
+                    <Link to={PATH_DRINK} className="py-2 px-5 transition-option hover:text-white ">Drink</Link>                  
                 </div>
             </div>
     );
