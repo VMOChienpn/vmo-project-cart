@@ -8,8 +8,10 @@ import { getKeySearch } from '../../../redux/products/action';
 const Search = () => {
     const dispatch = useDispatch()
     const handleOnChange = (e) => {
-        const keySearch = e.target.value 
-        dispatch(getKeySearch(keySearch))                  
+        setTimeout(() => {
+            const keySearch = e.target.value
+            dispatch(getKeySearch(keySearch))                  
+        }, 1000)
     }
 
     return (

@@ -116,7 +116,7 @@ const Cart = () => {
             setShowOrderHistory(orderHistory)
             await(localStorage.setItem("ordered", JSON.stringify(orderHistory)))
             localStorage.setItem("order", JSON.stringify([]))
-            toast.success("Order Success", {
+            toast.success("Your order is in processing, we'll contact you soon!", {
                 position: "bottom-right",
             })
             setIsValid(false)
@@ -132,7 +132,7 @@ const Cart = () => {
                         setDataLocal(orderProducts)
                     }
                 }())               
-            }, 1500);
+            }, 4000);
         }
     }
 

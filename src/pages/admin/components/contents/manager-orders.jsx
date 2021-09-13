@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { getOrder } from '../../../../services/api';
 import { deleteProductOrder } from '../../../../redux/admin/action';
+import Pagination from './products/pagination';
 
 const ManagerOrders = () => {
     const [isFormDelete, setIsFormDelete] = useState(false)
@@ -15,6 +16,8 @@ const ManagerOrders = () => {
     const [listUser, setListUser] = useState([])
     const [infoUser, setInfoUser] = useState([])
     const [infoOrder, setInfoOrder] = useState([])
+    const [currentPage, setCurrentPage] = useState(1)
+    const [postsPerPage] = useState(5)
 
 
     const dispatch = useDispatch()
@@ -38,6 +41,11 @@ const ManagerOrders = () => {
             setListUser(list.reverse());
         })
         }, [])
+
+    const indexOfLastPost = postsPerPage * currentPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage
+    const currentUser = listUser.slice(indexOfFirstPost, indexOfLastPost)
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     const handleShowFormDel = (id) => {
         setIsFormDelete(!isFormDelete)
@@ -79,11 +87,27 @@ const ManagerOrders = () => {
     const numberWithCommas = (x) => {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
+    const orderedProduct = () => {
+        firebase.database().ref('products/order').on('value', snapshot => {
+            const list = []
+            snapshot.forEach(value => {
+                list.push(value.val())
+            })
+            console.log(list);
+        });
+    }
+    firebase.database().ref('products/order').on('value', snapshot => {
+        const list = []
+        snapshot.forEach(value => {
+            list.push(value.val())
+        })
+        console.log(list);
+    });
     return (
         <div className="relative">
             <h1 className="text-center text-2xl font-bold ">ORDER MANAGEMENT</h1>
-            <div className="w-full my-10 flex">               
-                <div className="bg-white h-full w-full mr-7">
+            <div className="w-full mt-10 mb-4 flex">               
+                <div className="bg-white h-full w-full" style={{minHeight: "330px"}}>
                     <table className="min-w-full bg-white ">
                         <thead className="bg-gray-500 text-white">
                             <tr>
@@ -95,7 +119,7 @@ const ManagerOrders = () => {
                             </tr>
                         </thead>
                         <tbody className="text-gray-700 ">
-                             {listUser.map((value, key) => {
+                             {currentUser.map((value, key) => {
                                 return(
                                     <tr key={key} style={{borderBottom:"1px solid gray"}}>
                                         <td className="text-left py-2 px-4">{key + 1}</td>
@@ -194,6 +218,24 @@ const ManagerOrders = () => {
             </div>
             )}
             <ToastContainer/>
+            <Pagination totalDrink={listUser.length} postsPerPage={postsPerPage} paginate={paginate}/>
+            <div className="w-full mt-20">
+                <h2 className="text-center text-xl font-bold ">Detailed statistics</h2>
+                <div className="flex justify-center mt-14">
+                    <div className="p-10 bg-blue-400 rounded-md mx-10 w-80">
+                        <h3 className="text-white text-xl text-center mb-10">Ordered products </h3>
+                        <h4 className="text-5xl text-center w-full">{orderedProduct}</h4>
+                    </div>
+                    <div className="p-10 bg-blue-400 rounded-md mx-10 w-80">
+                        <h3 className="text-white text-xl text-center mb-10">Number of customers</h3>
+                        <h4 className="text-5xl text-center w-full">10</h4>
+                    </div>
+                    <div className="p-10 bg-blue-400 rounded-md mx-10 w-80">
+                        <h3 className="text-white text-xl text-center mb-10">Revenue</h3>
+                        <h4 className="text-5xl text-center w-full">10</h4>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
