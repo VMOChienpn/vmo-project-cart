@@ -6,9 +6,10 @@ import Header from '../../components/header/header';
 import Footer from '../../components/footer/footer';
 import Home from './components/home';
 //import Products from '../products/products';
-import {PATH_HOME, PATH_NULL, PATH_FOOD, PATH_DRINK} from '../../routers/router'
+import {PATH_HOME, PATH_NULL, PATH_FOOD, PATH_DRINK, PATH_LOGIN} from '../../routers/router'
 import ListFood from '../products/components/food/list-food';
 import ListDrink from '../products/components/drink/list-drink';
+import FormLogin from '../login/components/login/form-login';
 
 const index = () => {
     return (
@@ -19,7 +20,7 @@ const index = () => {
                     <Route exact path={PATH_HOME} component={Home} />
                     <Route exact path={PATH_FOOD} component={ListFood} />
                     <Route exact path={PATH_DRINK} component={ListDrink} />
-
+                    <Route exact path={PATH_LOGIN} component={FormLogin} />
                 </Switch>
             <Footer/>          
         </div>

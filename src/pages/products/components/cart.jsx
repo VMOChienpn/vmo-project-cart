@@ -1,27 +1,26 @@
 import React from 'react';
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import "../../../styles/styles.scss"
-import {addProductOrderFirebase, changeStatusShowCart, deleteProduct} from '../../../redux/products/action'
+import {addProductOrderFirebase, changeStatusShowCart, deleteProduct, quantityOrder} from '../../../redux/products/action'
 
 const Cart = () => {
+    const userLogin = useSelector(state => state.userReducer.userLogin)
     const [dataLocal, setDataLocal] = useState([])
     const [showOrderHistory, setShowOrderHistory] = useState([])
     const [btnShowHistory, setBtnShowHistory] = useState(false)
     const [showFormDelete, setShowFormDelete] = useState(false)
     const [idDelete, setIdDelete] = useState("")
-
-
-    const [detailts, setDetails] = useState({nameUser: "", numberUser: "", addressUser:""})
+    const [detailts, setDetails] = useState({
+        nameUser: userLogin.name, 
+        numberUser: userLogin.phonenumber, 
+        addressUser:userLogin.address
+    })
     const [isValid, setIsValid] = useState(false)
-
     const dispatch = useDispatch()
-    const closeCart = () => {
-        dispatch(changeStatusShowCart())
-    }
 
     useEffect(() => {
         const orderProducts = JSON.parse(localStorage.getItem("order"))
@@ -33,8 +32,14 @@ const Cart = () => {
             });      
             setDataLocal(orderProducts)
         }
+        return () => {
+            orderProducts
+        }
     }, [])
-    
+    const closeCart = () => {
+        dispatch(changeStatusShowCart())
+    }
+
     const clearHistory = () => {
         dataLocal.length = []
         localStorage.setItem("ordered", JSON.stringify(dataLocal))
@@ -64,9 +69,8 @@ const Cart = () => {
     const deleteBtn = (e) => {
         e.preventDefault()
         setShowFormDelete(!showFormDelete)
-        // const filterItem = dataLocal.filter(item => item.id !== idDelete)
-        // localStorage.setItem("order", JSON.stringify(filterItem))
         dispatch(deleteProduct(idDelete, dataLocal))
+        dispatch(quantityOrder())
         ;(function(){
             const orderProducts = JSON.parse(localStorage.getItem("order"))
             if(orderProducts){
@@ -104,36 +108,46 @@ const Cart = () => {
         setShowOrderHistory(listOrdered)
         setBtnShowHistory(!btnShowHistory)
     }
-    const btnOrder = async() => {
-        if(detailts.nameUser == "" || detailts.numberUser == "" || detailts.addressUser == ""){
-            setIsValid(true)
-        }else{
-            const listOrdered = await(JSON.parse(localStorage.getItem("ordered")))
-            const orderedInfo = await([detailts,...dataLocal]) 
-            dispatch(addProductOrderFirebase(orderedInfo));
-            //const listOrder = await(JSON.parse(localStorage.getItem("order")))
-            const orderHistory = await([...dataLocal, ...listOrdered])
-            setShowOrderHistory(orderHistory)
-            await(localStorage.setItem("ordered", JSON.stringify(orderHistory)))
-            localStorage.setItem("order", JSON.stringify([]))
-            toast.success("Your order is in processing, we'll contact you soon!", {
-                position: "bottom-right",
-            })
-            setIsValid(false)
-            setTimeout(() => {
-                ;(function(){
-                    const orderProducts = JSON.parse(localStorage.getItem("order"))
-                    if(orderProducts){
-                        const listOder = [];  
-                        orderProducts.forEach(element => {
-                            element.price = element.quantity * element.price
-                            listOder.push(element)
-                        });      
-                        setDataLocal(orderProducts)
-                    }
-                }())               
-            }, 4000);
+
+    const orderUser = async() => {
+        const listOrdered = await(JSON.parse(localStorage.getItem("ordered")))
+        const orderedInfo = await([detailts,...dataLocal]) 
+        dispatch(addProductOrderFirebase(orderedInfo));
+        const orderHistory = await([...dataLocal, ...listOrdered])
+        setShowOrderHistory(orderHistory)
+        await(localStorage.setItem("ordered", JSON.stringify(orderHistory)))
+        localStorage.setItem("order", JSON.stringify([]))
+        toast.success("Your order is in processing, we'll contact you soon!", {
+            position: "bottom-right",
+        })
+        setIsValid(false)
+        setTimeout(() => {
+            ;(function(){
+                const orderProducts = JSON.parse(localStorage.getItem("order"))
+                if(orderProducts){
+                    const listOder = [];  
+                    orderProducts.forEach(element => {
+                        element.price = element.quantity * element.price
+                        listOder.push(element)
+                    });      
+                    setDataLocal(orderProducts)
+                }
+            }())               
+        }, 4000);
+        dispatch(quantityOrder())
+    }
+
+    const btnOrder = () => {
+        if(!userLogin){
+            if(detailts.nameUser == "" || detailts.numberUser == "" || detailts.addressUser == ""){
+                setIsValid(true)
+            }else{    
+                orderUser()
+            }
         }
+        else{
+            orderUser()
+        }       
     }
 
     return (
@@ -182,13 +196,13 @@ const Cart = () => {
                         <p className="text-xl">Consignee information </p>
                         <div className="bg-white pt-4">
                             <div className="mb-4 flex">
-                                <input onChange={(e)=>setDetails({...detailts, nameUser:e.target.value})} className="border-input rounded w-full py-2 px-3 text-gray-700 focus:outline-none " placeholder="name" />
+                                <input onChange={(e)=>setDetails({...detailts, nameUser:e.target.value})} className="border-input rounded w-full py-2 px-3 text-gray-700 focus:outline-none " placeholder="name" defaultValue={userLogin.name}/>
                             </div>
                             <div className="mb-4">
-                                <input onChange={(e)=>setDetails({...detailts, numberUser:e.target.value})} className="border-input rounded w-full py-2 px-3 text-gray-700 focus:outline-none " placeholder="phone number" />
+                                <input onChange={(e)=>setDetails({...detailts, numberUser:e.target.value})} className="border-input rounded w-full py-2 px-3 text-gray-700 focus:outline-none " placeholder="phone number" defaultValue={userLogin.phonenumber}/>
                             </div>
                             <div className="mb-4">
-                                <input onChange={(e)=>setDetails({...detailts, addressUser:e.target.value})} className="border-input rounded w-full py-2 px-3 text-gray-700 focus:outline-none " placeholder="address" />
+                                <input onChange={(e)=>setDetails({...detailts, addressUser:e.target.value})} className="border-input rounded w-full py-2 px-3 text-gray-700 focus:outline-none " placeholder="address" defaultValue={userLogin.address}/>
                             </div>
                         </div>
                         <div className="mt-10 text-lg">Total: <span className="text-custom-yellow">{numberWithCommas(handleTotalPrice())} VNĐ</span></div>

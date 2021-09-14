@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import '../../../../styles/styles.scss'
 // import burger from '../../assets/img/burger.png'
-import {changeStatusShowInfoProduct} from '../../../../redux/products/action/index'
+import {changeStatusShowInfoProduct, quantityOrder} from '../../../../redux/products/action/index'
 import {getFoods} from '../../../../services/api';
 import { addProduct } from '../../../../redux/products/action/index';
 
@@ -17,6 +17,7 @@ const FoodInfo = () => {
     const dispatch = useDispatch()
     const getFood = getFoods();
     const getIdProduct = useSelector(state => state.allProducts.idFood)
+
     const food = getFood.find((item) => item.id === getIdProduct)  
 
     const oderProduct = () => {
@@ -28,7 +29,8 @@ const FoodInfo = () => {
             setIsValid(true)
         }else{
             dispatch(addProduct(food, valueInputNote, valueInputQuatity))   
-            dispatch(changeStatusShowInfoProduct())     
+            dispatch(quantityOrder())
+            dispatch(changeStatusShowInfoProduct())                        
         }
     }
 
@@ -46,7 +48,8 @@ const FoodInfo = () => {
     return (
         <aside className="w-full md:w-3/5 xl:w-2/5 shadow-2xl rounded-lg bg-white z-10 absolute left-1/2 -translate-x-2/4 transform" id="side-panel">
             <div className="p-5">
-                <button onClick={oderProduct} className="float-left bg-gray-200 py-2 px-6 rounded-full" id="close-side-panel"><i className="fas fa-times" /></button>
+                <button onClick={oderProduct} className="float-left bg-gray-200 py-2 px-6 rounded-full" id="close-side-panel"><i className="fas fa-times" />
+                </button>
                 <main className="text-center mb-10">
                     <img src={food.image} alt="burger" className=" max-h-72 rounded-3xl w-56 mx-auto mt-10 mb-6" />
                     <span className="font-bold text-2xl">{food.name}</span>

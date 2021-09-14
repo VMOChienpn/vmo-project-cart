@@ -1,5 +1,6 @@
 import * as types from "../action/types"
 import firebase from 'firebase'
+//import { toast } from "react-toastify"
 
 const initialStateProducts = {
     isStatusShowCart: false,
@@ -8,6 +9,7 @@ const initialStateProducts = {
     idDrink: "",
     keySearch: "",
     orderProduct: [],
+    quantityOrder: ""
 }
 
 const productsReducer = (state = initialStateProducts, action) => {
@@ -22,14 +24,13 @@ const productsReducer = (state = initialStateProducts, action) => {
             return { ...state, idDrink: action.id }
         case types.GET_KEY_SEARCH:
             return { ...state, keySearch: action.key }
+
         case types.ADD_PRODUCT:
-            console.log(state.dataLocal)
             if (localStorage.getItem("order") === null) {
                 action.product.quantity = action.valueInputQuantity
                 action.product.notes = action.valueInputNote;
                 state.orderProduct = [action.product];
                 localStorage.setItem("order", JSON.stringify(state.orderProduct))
-
             } else {
                 const getItemFromLocal = JSON.parse(localStorage.getItem('order'))
                 action.product.quantity = action.valueInputQuantity
@@ -38,7 +39,10 @@ const productsReducer = (state = initialStateProducts, action) => {
                 localStorage.setItem("order", JSON.stringify(state.orderProduct))
             }
             return state
-
+        case types.GET_QUANTITY_ORDER: {
+            const getOrder = JSON.parse(localStorage.getItem("order"))
+            return { ...state, quantityOrder: getOrder.length }
+        }
         case types.DELETE_PRODUCT: {
             const filterItem = action.dataLocal.filter(item => item.id !== action.id)
             localStorage.setItem("order", JSON.stringify(filterItem))

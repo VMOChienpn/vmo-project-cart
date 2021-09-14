@@ -18,6 +18,7 @@ const ListFood = () => {
     const isStatusShowInfoProduct = useSelector((state) => state.allProducts.isStatusShowInfoProduct)
     const keySearch = useSelector(state => state.allProducts.keySearch)
     const [listFoods, setListFoods] = useState([])
+    const quantityOrder = useSelector(state => state.allProducts.quantityOrder)
     const showCart = () => {
         dispatch(changeStatusShowCart())
     }
@@ -25,7 +26,7 @@ const ListFood = () => {
     const showInfoProduct = () => {
         dispatch(changeStatusShowInfoProduct());
     }
-
+    
     useEffect(() => {
         getFood.on('value', (snapshot) => {
             let list = [];
@@ -52,8 +53,6 @@ const ListFood = () => {
             setListFoods(list)
         })
     }, [])
-
-
     const handleClick = (e) => {
         showInfoProduct()
         const id = e.currentTarget.id;
@@ -72,7 +71,8 @@ const ListFood = () => {
             <div className=" mt-28 mt-32-mobile relative">
                 <div className="flex justify-end pt-6">
                     <Search/>
-                    <button onClick={showCart} className=" font-bold text-xl rounded-full bg-white mr-6 py-4 px-5 shadow-lg hover:bg-yellow-300 transition-all hover:text-white" ><i className="fas fa-shopping-basket" />
+                    <button onClick={showCart} className="relative font-bold text-xl rounded-full bg-white mr-6 py-4 px-5 shadow-lg hover:bg-yellow-300 transition-all hover:text-white" ><i className="fas fa-shopping-basket" />
+                        <span className="absolute bottom-10 px-2 bg-yellow-400 text-white rounded-full">{quantityOrder}</span>
                     </button>
                 </div>
                 {isStatusShowCart && <Cart/>}

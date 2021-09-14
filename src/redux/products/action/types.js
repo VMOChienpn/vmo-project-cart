@@ -5,6 +5,8 @@ export const GET_ID_FOOD = "GET_ID_FOOD"
 export const GET_ID_DRINK = "GET_ID_DRINK"
 export const GET_KEY_SEARCH = "GET_KEY_SEARCH"
 
+export const GET_QUANTITY_ORDER = "GET_QUANTITY_ORDER"
+
 export const ADD_PRODUCT = "ADD_PRODUCT"
 export const DELETE_PRODUCT = "DELETE_PRODUCT"
 

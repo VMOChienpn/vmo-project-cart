@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import '../../../../styles/styles.scss'
 // import burger from '../../assets/img/burger.png'
-import {changeStatusShowInfoProduct} from '../../../../redux/products/action/index'
+import {changeStatusShowInfoProduct, quantityOrder} from '../../../../redux/products/action/index'
 import {getDrinks} from '../../../../services/api';
 import { addProduct } from '../../../../redux/products/action/index';
 
@@ -26,8 +26,9 @@ const DrinkInfo = () => {
         if(valueInputQuatity === ""){
             setIsValid(true)
         }else{
-            dispatch(addProduct(drink, valueInputNote, valueInputQuatity))  
-            dispatch(changeStatusShowInfoProduct())     
+            dispatch(addProduct(drink, valueInputNote, valueInputQuatity))
+            dispatch(quantityOrder())
+            dispatch(changeStatusShowInfoProduct())                     
         }        
     }
     const handleInputQuantity = (e) => {

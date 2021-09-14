@@ -27,6 +27,15 @@ export const getIdDrink = (id) => {
         type: types.GET_ID_DRINK, id
     }
 }
+
+
+export const quantityOrder = () => {
+    return {
+        type: types.GET_QUANTITY_ORDER
+    }
+}
+
+
 export const getKeySearch = (key) => {
     return {
         type: types.GET_KEY_SEARCH, key

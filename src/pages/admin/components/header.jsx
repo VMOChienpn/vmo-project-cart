@@ -1,10 +1,15 @@
 import React from 'react';
 import {useState} from 'react'
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
-import { PATH_LOGIN } from '../../../routers/router';
+import { Link } from 'react-router-dom';
+
+import { userLogout } from '../../../redux/login/action';
+import { PATH_HOME } from '../../../routers/router';
 
 const Header = () => {
     let history = useHistory()
+    const dispatch = useDispatch()
     const [isShowLog, setIsShowLog] = useState(false)
 
     const handleClickShowLog = () => {
@@ -12,8 +17,9 @@ const Header = () => {
     }
 
     const logOut = () => {
-        localStorage.removeItem("accessToken")
-        history.replace(PATH_LOGIN)
+        localStorage.removeItem("accessTokenAdmin")
+        history.replace(PATH_HOME)
+        dispatch(userLogout)
     }
     return (
         <>
@@ -25,6 +31,7 @@ const Header = () => {
                         </button>
                         {isShowLog && 
                         (<div className="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16">
+                                <Link to={PATH_HOME} className="block px-4 py-2 hover:text-blue-500">Home</Link>
                                 <a href="#" className="block px-4 py-2 hover:text-blue-500">Account</a>
                                 <a href="#" className="block px-4 py-2 hover:text-blue-500">Support</a>
                                 <a onClick={logOut} href="#" className="block px-4 py-2 hover:text-blue-500">Sign Out</a>
