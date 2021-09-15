@@ -29,7 +29,10 @@ const FormLogin = () => {
                 list.push(value.val())
             })
             setUser(list)
-        })        
+        })
+        return () => {
+            getAdmin
+        }        
     }, [])
 
     const login = (e) => {
@@ -39,22 +42,26 @@ const FormLogin = () => {
                 localStorage.setItem("accessTokenUser", true)
                 setLoading(true)
                 setTimeout(() => {
-                    history.replace(PATH_HOME)                  
-                }, 2000);
+                     history.replace(PATH_HOME)                  
+                }, 1500);
                 dispatch(userLogin(value))
-                setIsValid(false)
+                setIsValid(false) 
             }
             else if(detailts.username === value.username && detailts.password === value.password && value.role === "admin"){
                 localStorage.setItem("accessTokenAdmin", true)
                 setLoading(true)
                 setTimeout(() => {
-                    history.replace(PATH_HOME)                  
-                }, 2000);
+                     history.replace(PATH_HOME)                  
+                }, 1500);
                 dispatch(userLogin(value))
-                setIsValid(false)
+                setIsValid(false) 
             }
             else{
-                setIsValid(true)
+                setLoading(true)
+                setTimeout(() => {
+                    setIsValid(true)                 
+               }, 1500);
+                
             }
         })
     }

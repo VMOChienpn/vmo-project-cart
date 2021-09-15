@@ -40,7 +40,10 @@ const ManagerOrders = () => {
             })
             setListUser(list.reverse());
         })
-        }, [])
+        return () => {
+            getOrder
+        }
+    }, [])
 
     const indexOfLastPost = postsPerPage * currentPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage

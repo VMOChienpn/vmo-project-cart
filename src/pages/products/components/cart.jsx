@@ -15,12 +15,20 @@ const Cart = () => {
     const [showFormDelete, setShowFormDelete] = useState(false)
     const [idDelete, setIdDelete] = useState("")
     const [detailts, setDetails] = useState({
-        nameUser: userLogin.name, 
-        numberUser: userLogin.phonenumber, 
-        addressUser:userLogin.address
+        nameUser: "", 
+        numberUser: "", 
+        addressUser:""
     })
     const [isValid, setIsValid] = useState(false)
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        if(Object.keys(userLogin).length !== 0 && userLogin.constructor === Object){
+            setDetails({nameUser: userLogin.name, 
+                numberUser: userLogin.phonenumber, 
+                addressUser:userLogin.address})
+        }  
+    }, [userLogin])
 
     useEffect(() => {
         const orderProducts = JSON.parse(localStorage.getItem("order"))
@@ -41,8 +49,8 @@ const Cart = () => {
     }
 
     const clearHistory = () => {
-        dataLocal.length = []
-        localStorage.setItem("ordered", JSON.stringify(dataLocal))
+        
+        localStorage.setItem("ordered", JSON.stringify([]))
         ;(function(){
             const history = JSON.parse(localStorage.getItem("ordered"))
             if(history){
@@ -138,16 +146,20 @@ const Cart = () => {
     }
 
     const btnOrder = () => {
-        if(!userLogin){
-            if(detailts.nameUser == "" || detailts.numberUser == "" || detailts.addressUser == ""){
+        // if(userLogin){
+        //     orderUser()
+        // }else{
+            if(detailts.nameUser === "" || detailts.numberUser === "" || detailts.addressUser === ""){
                 setIsValid(true)
             }else{    
                 orderUser()
+
             }
-        }
-        else{
-            orderUser()
-        }       
+        //}
+        // }
+        // else{
+        //     orderUser()
+        // }       
     }
 
     return (

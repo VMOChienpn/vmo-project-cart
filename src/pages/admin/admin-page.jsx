@@ -26,8 +26,7 @@ const AdminPage = () => {
                         </Switch>     
                     </div>
                 </div>
-            </div>
-   
+            </div>  
     );
 };
 

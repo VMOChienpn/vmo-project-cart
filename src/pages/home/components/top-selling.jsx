@@ -44,10 +44,10 @@ const TopSelling = () => {
             <div className="font-bold text-mobile text-center md:text-2xl xl:text-5xl pb-mobile mb-5">
                 Top Rating
             </div>
-            <div className="grid lg:grid-cols-3 2xl:grid-cols-5 pb-20 text-gray-900 md:text-center">
+            <div className="grid lg:grid-cols-2 2xl:grid-cols-5 pb-20 text-gray-900 md:text-center">
                 <div className="lg:col-span-5 w-2/3 m-auto">
                     <div className="mt-16">
-                        <div className="mt-10 grid sm:grid-cols-2 xl-grid-cols-3 xl2-grid-cols-5 gap-16">
+                        <div className="mt-10 grid sm:grid-cols-2 xl-grid-cols-2 xl2-grid-cols-5 gap-16">
                         {food.length > 0 ? (
                             food.map((element, index) => {
                                     return(   

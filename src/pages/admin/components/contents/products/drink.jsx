@@ -191,7 +191,7 @@ const Drink = () => {
             <h1 className="text-2xl font-bold text-center mt-10 mb-1">DRINK</h1>
             <button onClick={()=>showFormAdd()} className=" my-4 mr-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">Add</button>   
             <div className="w-full">
-                <div className="bg-white w-full mr-7 relative" style={{minHeight: "580px"}}>
+                <div className="bg-white w-full mr-7 relative" style={{minHeight: "560px"}}>
                     <table className="min-w-full bg-white ">
                         <thead className="bg-gray-500 text-white">
                             <tr>
