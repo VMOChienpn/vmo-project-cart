@@ -50,11 +50,11 @@ const DrinkInfo = () => {
                     <span className="block text-gray-600 text-md">{drink.description}</span>
                     <span className="block text-custom-yellow mt-5 font-bold text-2xl"> <i className="fas fa-tags"></i> {numberWithCommas(drink.price)} VNĐ</span>
                     <span className="block mt-5"> Quantity:
-                        <input id="quantity" onChange={handleInputQuantity} type="number" min="1" className="rounded-lg bg-gray-200 p-2 ml-2 w-24" placeholder="Số lượng"/>
+                        <input id="quantity" onChange={handleInputQuantity} type="number" min="1" className="rounded-lg bg-gray-200 p-2 ml-2 w-24" placeholder="Quantity"/>
                     </span>
                     {isValid && (<p className="text-red-400 my-2">Please enter quantity</p>)}
                     <span className="block my-4">
-                        <input id="input" onChange={handleInputNote} type="text" className="rounded-lg bg-gray-200 p-2 w-6/12" placeholder="Thêm ghi chú.." />
+                        <input id="input" onChange={handleInputNote} type="text" className="rounded-lg bg-gray-200 p-2 w-6/12" placeholder="Add notes.." />
                     </span>
                     <button onClick={handleGetProduct} className="rounded-lg bg-custom-yellow px-4 py-2 font-bold hover:text-white text-xl transition">Add to cart</button>
                 </main>

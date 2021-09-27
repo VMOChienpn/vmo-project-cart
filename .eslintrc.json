@@ -1,8 +1,8 @@
 {
   "env": {
     "browser": true,
-    "es2021": true,
-    "commonjs": true
+    "es2020": true,
+    "node": true
   },
   "extends": [
       "eslint:recommended",
@@ -24,6 +24,13 @@
   },
   "rules": {
     "react-hooks/rules-of-hooks": "warn",
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "warn",
+    "no-unused-vars": [
+      "warn",
+      {
+          "vars": "all",
+          "args": "none"
+      }
+  ]
   }
 }

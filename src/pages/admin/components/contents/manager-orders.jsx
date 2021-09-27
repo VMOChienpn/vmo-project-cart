@@ -17,7 +17,7 @@ const ManagerOrders = () => {
     const [infoUser, setInfoUser] = useState([])
     const [infoOrder, setInfoOrder] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
-    const [postsPerPage] = useState(10)
+    const [postsPerPage] = useState(2)
 
 
     const dispatch = useDispatch()

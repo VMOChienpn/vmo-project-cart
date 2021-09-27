@@ -119,18 +119,18 @@ const Cart = () => {
 
     const orderUser = async() => {
         const listOrdered = await(JSON.parse(localStorage.getItem("ordered")))
-        const orderedInfo = await([detailts,...dataLocal]) 
+        const orderedInfo = ([detailts,...dataLocal]) 
         dispatch(addProductOrderFirebase(orderedInfo));
-        const orderHistory = await([...dataLocal, ...listOrdered])
+        const orderHistory = ([...dataLocal, ...listOrdered])
         setShowOrderHistory(orderHistory)
-        await(localStorage.setItem("ordered", JSON.stringify(orderHistory)))
+        (localStorage.setItem("ordered", JSON.stringify(orderHistory)))
         localStorage.setItem("order", JSON.stringify([]))
         toast.success("Your order is in processing, we'll contact you soon!", {
             position: "bottom-right",
         })
         setIsValid(false)
         setTimeout(() => {
-            ;(function(){
+            
                 const orderProducts = JSON.parse(localStorage.getItem("order"))
                 if(orderProducts){
                     const listOder = [];  
@@ -140,7 +140,7 @@ const Cart = () => {
                     });      
                     setDataLocal(orderProducts)
                 }
-            }())               
+                          
         }, 4000);
         dispatch(quantityOrder())
     }
